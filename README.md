@@ -8,7 +8,7 @@
 - Create an Expo account [click here](https://expo.dev/signup)
 - Create a GitHub account [click here](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home)
 
-## Getting Started
+## Initial setup
 1. Create Expo project
     - ```npx create-expo-app --template```
     - ```select Blank (Typescript)```
@@ -59,4 +59,37 @@
 ```
 
 ## Collaborating with Git
+### Clone repository
+Git documentation and reference can be found [here](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
+- Open terminal, enter ```git clone https://github.com/johnApale/treko-places-expo.git```
 
+### Branching and Merging
+Git documentation on branching and merging can be found [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
+#### Branching
+```
+    git checkout -b <feature-name>
+    Switches to new branch "<feature-name>"
+```
+**NOTE**: Branch names should be formatted as username/feature-name or username/issue-number
+- Example:
+```
+    git checkout -b johnApale/home-screen
+    - or -
+    git checkout -b johnApale/issue-1
+```
+#### Commiting changes within branch
+```
+    git add .
+    Adds all newly added files to the working tree
+    git commit -m <Add message>
+    Commits the changes to the branch
+```
+#### Merging
+```
+    git checkout main
+    Switches to 'main' branch
+    git merge <feature-name>
+    Merges to the feature worked on with main branch
+    git push
+    Updates the remote repo
+```
