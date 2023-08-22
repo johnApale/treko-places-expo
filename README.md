@@ -1,5 +1,5 @@
 # TREKO Places Expo App
-## Pre-checklist:
+## Starter checklist:
 - Install Node.js [click here](https://nodejs.org/en)
 - Install yarn for package management
     npm install --global yarn
@@ -66,30 +66,37 @@ Git documentation and reference can be found [here](https://git-scm.com/book/en/
 ### Branching and Merging
 Git documentation on branching and merging can be found [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
 #### Branching
+##### Switch to new branch "feature-name"
 ```
-    git checkout -b <feature-name>
-    Switches to new branch "<feature-name>"
+    git checkout -b [feature-name]
 ```
-**NOTE**: Branch names should be formatted as username/feature-name or username/issue-number
-- Example:
+##### **NOTE**: Branch names should be formatted as username/feature-name or username/issue-number
+##### Example:
 ```
     git checkout -b johnApale/home-screen
-    - or -
+```
+```
     git checkout -b johnApale/issue-1
 ```
 #### Commiting changes within branch
+##### Add all newly added files to the working tree
 ```
     git add .
-    Adds all newly added files to the working tree
-    git commit -m <Add message>
-    Commits the changes to the branch
+```
+##### Commit the changes to the branch
+```
+    git commit -m [Commit message]
 ```
 #### Merging
+##### Switch to 'main' branch
 ```
     git checkout main
-    Switches to 'main' branch
-    git merge <feature-name>
-    Merges to the feature worked on with main branch
+```
+##### Merge to the feature worked on with main branch
+```
+    git merge [feature-name]
+```
+##### Update the remote repo
+```
     git push
-    Updates the remote repo
 ```
