@@ -6,6 +6,7 @@ import Home from "./Home";
 import Leaderboard from "./Leaderboard";
 import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import { Text as textStyle } from "../../styles";
+import { HomeScreenProp } from "../../types";
 
 interface Tab {
   id: number;
@@ -26,13 +27,13 @@ const tabs: Tab[] = [
   },
 ];
 
-const HomeHeader = () => {
+const HomeHeader = ({ navigation }: HomeScreenProp) => {
   const [activeTab, setActiveTab] = useState(1);
 
   const renderScreen = () => {
     switch (activeTab) {
       case 1:
-        return <Home />;
+        return <Home navigation={navigation} />;
       case 2:
         return <Leaderboard />;
       default:

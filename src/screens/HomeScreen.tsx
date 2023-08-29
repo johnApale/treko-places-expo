@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import HomeHeader from "../components/home/HomeHeader";
-import Home from "../components/home/Home";
+import { HomeScreenProp } from "../types";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: HomeScreenProp) => {
   return (
     <View style={styles.container}>
-      <HomeHeader />
+      <HomeHeader navigation={navigation} />
     </View>
   );
 };

@@ -2,10 +2,11 @@ import { View, Text } from "react-native";
 import React from "react";
 import ActionButton from "../shared/ActionButton";
 import ScreenTitle from "../shared/ScreenTitle";
+import { HomeScreenProp } from "../../types";
 
-const Home = () => {
+const Home = ({ navigation }: HomeScreenProp) => {
   const handlePress = () => {
-    console.log("Button Pressed");
+    navigation.navigate("AddPlace");
   };
   return (
     <View
