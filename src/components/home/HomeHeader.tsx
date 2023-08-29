@@ -1,18 +1,29 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomTabBar from "../custom/TabBar";
 import Home from "./Home";
 import Leaderboard from "./Leaderboard";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
+import { Text as textStyle } from "../../styles";
 
 interface Tab {
   id: number;
   title: string;
+  icon?: any;
 }
 
 const tabs: Tab[] = [
-  { id: 1, title: "Home" },
-  { id: 2, title: "Leaderboard" },
+  {
+    id: 1,
+    title: "Home",
+    icon: <Feather name="home" size={16} color="#EA580C" />,
+  },
+  {
+    id: 2,
+    title: "Leaderboard",
+    icon: <AntDesign name="Trophy" size={16} color="#EA580C" />,
+  },
 ];
 
 const HomeHeader = () => {
@@ -28,14 +39,26 @@ const HomeHeader = () => {
         return null;
     }
   };
+
+  const handleLogout = () => {
+    console.log("Logout pressed.");
+  };
   return (
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.leftContainer}>
-          <Text>Logo</Text>
+          <Image source={require("../../../assets/TREKO-logo.png")} />
         </View>
         <View style={styles.rightContainer}>
-          <Text>Logout</Text>
+          <Pressable
+            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={handleLogout}
+          >
+            <Text style={{ ...(textStyle.link as any), marginRight: 5 }}>
+              Logout
+            </Text>
+            <Ionicons name="log-out-outline" size={20} color="#EA580C" />
+          </Pressable>
         </View>
       </SafeAreaView>
       <View>

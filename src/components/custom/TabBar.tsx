@@ -1,9 +1,11 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Text as textStyle } from "../../styles";
 
 interface Tab {
   id: number;
   title: string;
+  icon?: any;
 }
 
 interface CustomTabBarProps {
@@ -28,7 +30,8 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
           ]}
           onPress={() => onPressTab(tab.id)}
         >
-          <Text style={styles.tabText}>{tab.title}</Text>
+          {tab.icon}
+          <Text style={styles.tabText as any}>{tab.title}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -48,14 +51,19 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     flex: 1,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 10,
   },
   activeTab: {
-    backgroundColor: "#ddd",
+    backgroundColor: "#FE53031F",
     borderRadius: 4,
   },
+  // @ts-ignore
   tabText: {
+    ...textStyle.link,
+    marginLeft: 5,
     // fontWeight: "bold",
   },
 });
