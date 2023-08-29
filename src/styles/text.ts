@@ -6,13 +6,13 @@ export const link = {
 export const regText = {};
 
 export const screenTitle = {
-  fontSize: 20,
+  fontSize: 24,
   fontWeight: "600",
   marginBottom: 20,
 };
 
 export const titleDescription = {
-  fontSize: 14,
+  fontSize: 16,
   color: "#737373",
   marginBottom: 20,
 };
