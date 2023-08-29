@@ -1,5 +1,7 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { addInfoContent } from "../../constants/addPlaceFields";
 import ActionButton from "../shared/ActionButton";
 
@@ -10,7 +12,13 @@ interface Item {
   icon: JSX.Element;
 }
 
-const AddInfo = () => {
+interface InfoProp {
+  onClose: () => void;
+}
+
+const AddInfo = ({ onClose }: InfoProp) => {
+  const [showPrompt, setShowPrompt] = useState(true);
+
   const renderItem = ({ item }: { item: Item }) => (
     <View style={styles.items}>
       <View style={styles.iconColumn}>{item.icon}</View>
@@ -23,10 +31,18 @@ const AddInfo = () => {
 
   const handleContinue = () => {
     console.log("Continue pressed.");
+    onClose();
   };
 
-  const handleDontShow = () => {
-    console.log("Don't show pressed.");
+  const handleDontShow = async () => {
+    try {
+      await AsyncStorage.setItem("hideInfoPrompt", "true");
+      setShowPrompt(false);
+      onClose();
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
   };
 
   return (
