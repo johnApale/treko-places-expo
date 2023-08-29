@@ -3,7 +3,7 @@ import React from "react";
 
 const AddForm = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>AddForm</Text>
     </View>
   );
@@ -11,4 +11,10 @@ const AddForm = () => {
 
 export default AddForm;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "90%",
+    height: "100%",
+  },
+});
