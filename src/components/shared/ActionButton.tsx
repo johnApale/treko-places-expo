@@ -29,6 +29,6 @@ export default ActionButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#EA580C",
+    backgroundColor: "#E17858",
   },
 });

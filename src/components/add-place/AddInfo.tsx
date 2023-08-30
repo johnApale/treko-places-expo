@@ -46,7 +46,7 @@ const AddInfo = ({ onClose }: InfoProp) => {
   };
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "#F2EBE3" }}>
       <View style={styles.container}>
         <View style={{ padding: 20, backgroundColor: "#FAFAFA" }}>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
@@ -63,12 +63,12 @@ const AddInfo = ({ onClose }: InfoProp) => {
       <View style={{ margin: 20 }}>
         <ActionButton text="Continue" action={handleContinue} />
         <Pressable onPress={handleDontShow}>
-          <Text style={{ padding: 20, textAlign: "center", color: "#EA580C" }}>
+          <Text style={{ padding: 20, textAlign: "center", color: "#E17858" }}>
             Don't show this again
           </Text>
         </Pressable>
       </View>
-    </>
+    </View>
   );
 };
 

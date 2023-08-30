@@ -18,12 +18,12 @@ const tabs: Tab[] = [
   {
     id: 1,
     title: "Home",
-    icon: <Feather name="home" size={16} color="#EA580C" />,
+    icon: <Feather name="home" size={16} color="#E17858" />,
   },
   {
     id: 2,
     title: "Leaderboard",
-    icon: <AntDesign name="Trophy" size={16} color="#EA580C" />,
+    icon: <AntDesign name="Trophy" size={16} color="#E17858" />,
   },
 ];
 
@@ -48,7 +48,10 @@ const HomeHeader = ({ navigation }: HomeScreenProp) => {
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.leftContainer}>
-          <Image source={require("../../../assets/TREKO-logo.png")} />
+          <Image
+            style={{ height: 26, width: 26 }}
+            source={require("../../../assets/TREKO-logo.png")}
+          />
         </View>
         <View style={styles.rightContainer}>
           <Pressable

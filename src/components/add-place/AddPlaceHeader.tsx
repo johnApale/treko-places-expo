@@ -19,7 +19,7 @@ const AddPlaceHeader = () => {
             navigation.goBack();
           }}
         >
-          <AntDesign name="arrowleft" size={16} color="#EA580C" />
+          <AntDesign name="arrowleft" size={16} color="#E17858" />
           <Text style={{ ...(textStyle.link as any), marginLeft: 5 }}>
             Back
           </Text>
@@ -36,7 +36,7 @@ export default AddPlaceHeader;
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: "#D9D9D9",
     padding: 20,
   },

@@ -7,9 +7,11 @@ const Leaderboard = () => {
     <View
       style={{
         paddingHorizontal: 15,
+        paddingBottom: 100,
         width: "100%",
-        height: "80%",
+        height: "90%",
         justifyContent: "center",
+        backgroundColor: "#F2EBE3",
       }}
     >
       <ScreenTitle title="Coming soon..." textAlign="center" />

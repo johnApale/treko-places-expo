@@ -1,5 +1,5 @@
 export const link = {
-  color: "#EA580C",
+  color: "#E17858",
   fontWeight: "500",
 };
 
