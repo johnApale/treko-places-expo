@@ -39,6 +39,15 @@
     },
     "updates": {
       "url": "https://u.expo.dev/95f3c789-0705-4f27-bc2b-d29e675d2468"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends.",
+          "cameraPermission": "Allow TREKO to access your camera"
+        }
+      ]
+    ]
   }
 }

@@ -9,3 +9,11 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 export interface HomeScreenProp {
   navigation: HomeScreenNavigationProp;
 }
+
+export type AddFormType = {
+  photo_uri: string;
+  name: string;
+  category: [string];
+  description: string;
+  tags: [string];
+};

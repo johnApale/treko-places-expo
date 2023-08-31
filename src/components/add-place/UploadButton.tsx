@@ -3,11 +3,12 @@ import React from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { Feather } from "@expo/vector-icons";
 
-type UploadButtonProps = {
+type PhotoButtonProps = {
   action: (event: GestureResponderEvent) => void;
+  buttonType: "upload" | "camera";
 };
 
-const UploadButton = ({ action }: UploadButtonProps) => {
+const UploadButton = ({ action, buttonType }: PhotoButtonProps) => {
   return (
     <View>
       <Button
@@ -16,10 +17,16 @@ const UploadButton = ({ action }: UploadButtonProps) => {
         borderColor="lightgray"
         variant="outline"
         onPress={action}
+        borderRadius={15}
       >
-        <Feather name="upload-cloud" size={16} color="#E17858" />
+        {}
+        <Feather
+          name={buttonType === "upload" ? "upload-cloud" : "camera"}
+          size={16}
+          color="#E17858"
+        />
         <ButtonText color="#E17858" style={{ fontSize: 12, marginLeft: 5 }}>
-          Click to upload
+          {buttonType === "upload" ? "Upload photo" : "Take photo"}
         </ButtonText>
       </Button>
     </View>
