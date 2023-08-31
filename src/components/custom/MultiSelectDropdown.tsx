@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  FlatList,
   StyleSheet,
   Pressable,
 } from "react-native";
@@ -120,32 +119,30 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
       {isDropdownVisible && (
         <View style={styles.dropdownContainer}>
           <View style={styles.dropdown}>
-            <FlatList
-              data={filteredOptions}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
+            {filteredOptions.map((item) => (
+              <TouchableOpacity
+                key={filteredOptions.indexOf(item)}
+                style={[
+                  styles.option,
+                  selectedOptions.includes(item) && styles.selectedOption,
+                ]}
+                onPress={() => toggleOption(item)}
+              >
+                <Checkbox
+                  value={selectedOptions.includes(item)}
+                  onValueChange={() => toggleOption(item)}
+                  style={styles.checkbox} // Adjust styling
+                />
+                <Text
                   style={[
-                    styles.option,
-                    selectedOptions.includes(item) && styles.selectedOption,
+                    selectedOptions.includes(item) && { color: "#E17858" },
+                    { fontSize: 12 },
                   ]}
-                  onPress={() => toggleOption(item)}
                 >
-                  <Checkbox
-                    value={selectedOptions.includes(item)}
-                    onValueChange={() => toggleOption(item)}
-                    style={styles.checkbox} // Adjust styling
-                  />
-                  <Text
-                    style={
-                      selectedOptions.includes(item) && { color: "#E17858" }
-                    }
-                  >
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       )}
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
   checkbox: {
     height: 14,
     width: 14,
-    marginRight: 5,
+    marginRight: 8,
     borderWidth: 1,
     borderColor: "lightgray",
   },
