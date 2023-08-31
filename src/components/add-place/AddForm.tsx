@@ -8,10 +8,15 @@ import {
   FormControlLabelText,
   Input,
   InputField,
+  Textarea,
+  TextareaInput,
 } from "@gluestack-ui/themed";
 import Tag from "../custom/Tag";
+import MultiSelectDropdown from "../custom/MultiSelectDropdown";
 
 const AddForm = () => {
+  const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+
   const handleTagAdded = (tag: string) => {
     console.log("Tag added:", tag);
     // You can save the tag to your state or perform other actions here
@@ -27,22 +32,33 @@ const AddForm = () => {
             Take a photo or add one from your gallery.{"\n"}File limit is 10MB.
           </FormControlHelperText>
         </FormControlHelper>
-        <FormControlLabel style={{ marginBottom: 15 }}>
+        <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
           <FormControlLabelText>Name of location</FormControlLabelText>
         </FormControlLabel>
-        <Input>
+        <Input size="sm">
           <InputField
             placeholder="Location name"
-            style={{ backgroundColor: "white" }}
+            style={{ backgroundColor: "white", borderRadius: 3 }}
           />
         </Input>
-        <FormControlLabel style={{ marginBottom: 15 }}>
+        <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
           <FormControlLabelText>Category</FormControlLabelText>
         </FormControlLabel>
-        <FormControlLabel style={{ marginBottom: 15 }}>
+        <MultiSelectDropdown options={options} />
+        <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
           <FormControlLabelText>Description</FormControlLabelText>
         </FormControlLabel>
-        <FormControlLabel style={{ marginBottom: 15 }}>
+        <Textarea size="sm">
+          <TextareaInput
+            placeholder="Enter some details about your experience and whether you’d recommend this place."
+            style={{
+              backgroundColor: "white",
+              borderRadius: 3,
+              paddingTop: 10,
+            }}
+          />
+        </Textarea>
+        <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
           <FormControlLabelText>Tags</FormControlLabelText>
         </FormControlLabel>
         <Tag onTagAdded={handleTagAdded} />

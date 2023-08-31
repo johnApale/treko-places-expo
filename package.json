@@ -11,10 +11,12 @@
   "dependencies": {
     "@gluestack-ui/themed": "^0.1.10",
     "@react-native-async-storage/async-storage": "1.18.2",
+    "@react-native-community/checkbox": "^0.5.16",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@supabase/supabase-js": "^2.33.1",
     "expo": "~49.0.8",
+    "expo-checkbox": "^2.4.0",
     "expo-secure-store": "~12.3.1",
     "expo-status-bar": "~1.6.0",
     "expo-updates": "~0.18.12",
@@ -25,6 +27,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.4.0",
     "react-native-url-polyfill": "^2.0.0",
+    "react-native-vector-icons": "^10.0.0",
     "supabase": "^1.88.0"
   },
   "devDependencies": {
