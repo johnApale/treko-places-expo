@@ -5,8 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddPlaceHeader from "../components/add-place/AddPlaceHeader";
 import AddInfo from "../components/add-place/AddInfo";
 import AddForm from "../components/add-place/AddForm";
+import { MainNavigationProp } from "../types";
 
-const AddPlaceScreen = () => {
+const AddPlaceScreen = ({ navigation }: MainNavigationProp) => {
   const [showInfoPrompt, setShowInfoPrompt] = useState(true);
   const [hideInfoPrompt, setHideInfoPrompt] = useState(false);
 
@@ -34,7 +35,7 @@ const AddPlaceScreen = () => {
       {showInfoPrompt && !hideInfoPrompt ? (
         <AddInfo onClose={handleCloseInfoPrompt} />
       ) : (
-        <AddForm />
+        <AddForm navigation={navigation} />
       )}
     </>
   );

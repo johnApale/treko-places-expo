@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import HomeHeader from "../components/home/HomeHeader";
-import { HomeScreenProp } from "../types";
+import { MainNavigationProp } from "../types";
 
-const HomeScreen = ({ navigation }: HomeScreenProp) => {
+const HomeScreen = ({ navigation }: MainNavigationProp) => {
   return (
     <View style={styles.container}>
       <HomeHeader navigation={navigation} />

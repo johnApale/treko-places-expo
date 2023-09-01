@@ -1,13 +1,13 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../NavigationStack";
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<
+type MainStackNavigationType = NativeStackNavigationProp<
   RootStackParamList,
   "Home"
 >;
 
-export interface HomeScreenProp {
-  navigation: HomeScreenNavigationProp;
+export interface MainNavigationProp {
+  navigation: MainStackNavigationType;
 }
 
 export type AddFormType = {

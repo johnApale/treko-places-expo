@@ -14,6 +14,7 @@ const AddPlaceHeader = () => {
             flexDirection: "row",
             alignItems: "center",
             marginBottom: 10,
+            paddingTop: 15,
           }}
           onPress={() => {
             navigation.goBack();

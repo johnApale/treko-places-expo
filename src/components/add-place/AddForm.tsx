@@ -25,9 +25,9 @@ import ActionButton from "../shared/ActionButton";
 import CustomTextField from "../custom/CustomTextField";
 import UploadButton from "./UploadButton";
 
-import { AddFormType } from "../../types";
+import { AddFormType, MainNavigationProp } from "../../types";
 
-const AddForm = () => {
+const AddForm = ({ navigation }: MainNavigationProp) => {
   const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
   const [formData, setFormData] = useState<AddFormType | undefined>();
 
@@ -36,8 +36,6 @@ const AddForm = () => {
     if (permission.granted === true) {
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        // allowsEditing: true,
-        // aspect: [4, 3],
         quality: 1,
       });
 
@@ -57,8 +55,6 @@ const AddForm = () => {
   const handleUpload = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      // aspect: [4, 3],
       quality: 1,
     });
 
@@ -75,10 +71,10 @@ const AddForm = () => {
 
   const handleTagAdded = (tag: string) => {
     console.log("Tag added:", tag);
-    // You can save the tag to your state or perform other actions here
   };
   const handleSubmit = () => {
     console.log("Submit pressed");
+    navigation.navigate("Confirmation");
   };
 
   return (
@@ -99,7 +95,6 @@ const AddForm = () => {
               <UploadButton action={handleCamera} buttonType="camera" />
               <UploadButton action={handleUpload} buttonType="upload" />
             </View>
-            {/* {testData && <View>{testData}</View>} */}
             {formData?.photo_uri && (
               <View style={styles.photoContainer}>
                 <TouchableOpacity
