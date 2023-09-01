@@ -7,12 +7,25 @@ type TitleType = {
   description?: string;
   notice?: string;
   textAlign?: string;
+  titleSize?: number;
 };
 
-const ScreenTitle = ({ title, description, notice, textAlign }: TitleType) => {
+const ScreenTitle = ({
+  title,
+  description,
+  notice,
+  textAlign,
+  titleSize,
+}: TitleType) => {
   return (
     <View>
-      <Text style={{ ...(textStyle.screenTitle as any), textAlign: textAlign }}>
+      <Text
+        style={{
+          ...(textStyle.screenTitle as any),
+          fontSize: titleSize ?? 24,
+          textAlign: textAlign,
+        }}
+      >
         {title}
       </Text>
       {description && (
