@@ -23,9 +23,7 @@ const SignupScreen = ({ navigation }: AuthNavigationProp) => {
       <OAuthButton provider="Google" />
       <Divider marginTop={30}></Divider>
       <SignupForm />
-      <View style={{ marginTop: 50, marginBottom: 30 }}>
-        <ActionButton text="Create account" action={handleLogin} />
-      </View>
+
       <View style={styles.linksContainer}>
         <Text style={{ marginRight: 5, color: "gray" }}>Have an account?</Text>
         <Pressable onPress={navigateToSignup}>

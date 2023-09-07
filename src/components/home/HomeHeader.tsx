@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
+
 import CustomTabBar from "../custom/TabBar";
 import Home from "./Home";
 import Leaderboard from "./Leaderboard";
-import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import { Text as textStyle } from "../../styles";
 import { MainNavigationProp } from "../../types";
+import { useAuth } from "../../contexts/AuthProvider";
 
 interface Tab {
   id: number;
@@ -28,6 +30,7 @@ const tabs: Tab[] = [
 ];
 
 const HomeHeader = ({ navigation }: MainNavigationProp) => {
+  const { signOut } = useAuth();
   const [activeTab, setActiveTab] = useState(1);
 
   const renderScreen = () => {
@@ -42,7 +45,7 @@ const HomeHeader = ({ navigation }: MainNavigationProp) => {
   };
 
   const handleLogout = () => {
-    console.log("Logout pressed.");
+    signOut();
   };
   return (
     <>

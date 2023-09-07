@@ -3,15 +3,17 @@ import React from "react";
 import ActionButton from "../shared/ActionButton";
 import ScreenTitle from "../shared/ScreenTitle";
 import { MainNavigationProp } from "../../types";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const Home = ({ navigation }: MainNavigationProp) => {
+  const { user } = useAuth();
   const handlePress = () => {
     navigation.navigate("AddPlace");
   };
   return (
     <View style={styles.container}>
       <ScreenTitle
-        title="Hey there, explorer!"
+        title={`Hey there, ${user?.user_metadata.first_name || "explorer"}!`}
         textAlign="center"
         description="Hit the button below to start your journey and unlock a world of possibilities."
       />

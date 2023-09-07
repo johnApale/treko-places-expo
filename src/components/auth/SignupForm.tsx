@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
-import { signupFields } from "../../constants/authFields";
 import {
   EyeIcon,
   EyeOffIcon,
@@ -10,6 +9,10 @@ import {
   InputField,
   InputIcon,
 } from "@gluestack-ui/themed";
+
+import { signupFields } from "../../constants/authFields";
+import ActionButton from "../shared/ActionButton";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const fields = signupFields;
 let fieldsState: any = {};
@@ -21,7 +24,8 @@ const SignupForm = () => {
   const [signupState, setSignupState] = useState(fieldsState);
   const [showPassword, setShowPassword] = useState(false);
 
-  //   const { signUp } = useAuth();
+  const { signup } = useAuth();
+
   const handleState = () => {
     setShowPassword((showState) => {
       return !showState;
@@ -92,7 +96,7 @@ const SignupForm = () => {
       if (field.name !== "confirm_password")
         formData[field.name] = signupState[field.name].value;
     });
-    // signUp(formData);
+    signup(formData);
   };
 
   return (
@@ -124,6 +128,9 @@ const SignupForm = () => {
             </Input>
           </View>
         ))}
+        <View style={{ marginTop: 50, marginBottom: 30 }}>
+          <ActionButton text="Create account" action={handleSubmit} />
+        </View>
       </FormControl>
     </View>
   );

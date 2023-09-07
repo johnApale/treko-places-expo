@@ -1,8 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { loginFields } from "../../constants/authFields";
-import ActionButton from "../shared/ActionButton";
-import { useAuth } from "../../contexts/AuthProvider";
+import { StyleSheet, View } from "react-native";
 import {
   EyeIcon,
   EyeOffIcon,
@@ -12,8 +9,10 @@ import {
   InputField,
   InputIcon,
 } from "@gluestack-ui/themed";
-import { AuthData } from "../../types";
-import { supabase } from "../../../lib/supabase";
+
+import { loginFields } from "../../constants/authFields";
+import ActionButton from "../shared/ActionButton";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const fields = loginFields;
 const fieldsState: any = {};
@@ -24,6 +23,8 @@ loginFields.forEach((field) => {
 export default function LoginForm() {
   const [loginState, setLoginState] = useState(fieldsState);
   const [showPassword, setShowPassword] = useState(false);
+
+  const { signIn } = useAuth();
 
   const handleState = () => {
     setShowPassword((showState) => {
@@ -78,24 +79,7 @@ export default function LoginForm() {
       fields.forEach((field) => {
         formData[field.name] = loginState[field.name].value;
       });
-      login(formData);
-    }
-  };
-
-  const login = async (formData: AuthData) => {
-    const { email, password } = formData;
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        console.log(error);
-        throw new Error(error.message);
-      }
-    } catch (error) {
-      console.log(error);
+      signIn(formData);
     }
   };
 
