@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { loginFields } from "../../constants/authFields";
-import ActionButton from "../shared/ActionButton";
-import { useAuth } from "../../contexts/AuthProvider";
+import React, { useState } from "react";
+import { signupFields } from "../../constants/authFields";
 import {
   EyeIcon,
   EyeOffIcon,
@@ -12,19 +10,18 @@ import {
   InputField,
   InputIcon,
 } from "@gluestack-ui/themed";
-import { AuthData } from "../../types";
-import { supabase } from "../../../lib/supabase";
 
-const fields = loginFields;
-const fieldsState: any = {};
-loginFields.forEach((field) => {
+const fields = signupFields;
+let fieldsState: any = {};
+signupFields.forEach((field) => {
   fieldsState[field.name] = { value: "", error: false };
 });
 
-export default function LoginForm() {
-  const [loginState, setLoginState] = useState(fieldsState);
+const SignupForm = () => {
+  const [signupState, setSignupState] = useState(fieldsState);
   const [showPassword, setShowPassword] = useState(false);
 
+  //   const { signUp } = useAuth();
   const handleState = () => {
     setShowPassword((showState) => {
       return !showState;
@@ -32,7 +29,7 @@ export default function LoginForm() {
   };
 
   const handleChange = (name: string, text: string) => {
-    setLoginState((prevState: any) => ({
+    setSignupState((prevState: any) => ({
       ...prevState,
       [name]: { ...prevState[name], value: text, error: false },
     }));
@@ -41,62 +38,61 @@ export default function LoginForm() {
   const handleSubmit = () => {
     let hasError = false;
 
-    // Implement form validation based on your loginFields configuration
-    loginFields.forEach((field) => {
+    // Loop through the fields and validate each one
+    fields.forEach((field) => {
       if (
         field.validation?.required?.value &&
-        !loginState[field.name].value.trim()
+        !signupState[field.name].value.trim()
       ) {
-        setLoginState((prevState: any) => ({
+        setSignupState((prevState: any) => ({
           ...prevState,
           [field.name]: { ...prevState[field.name], error: true },
         }));
         hasError = true;
       } else if (
         field.validation?.pattern?.value &&
-        !field.validation.pattern.value.test(loginState[field.name].value)
+        !field.validation.pattern.value.test(signupState[field.name].value)
       ) {
-        setLoginState((prevState: any) => ({
+        setSignupState((prevState: any) => ({
           ...prevState,
           [field.name]: { ...prevState[field.name], error: true },
         }));
         hasError = true;
       } else if (
         field.validation?.minLength?.value &&
-        loginState[field.name].value.length < field.validation.minLength.value
+        signupState[field.name].value.length < field.validation.minLength.value
       ) {
-        setLoginState((prevState: any) => ({
+        setSignupState((prevState: any) => ({
           ...prevState,
           [field.name]: { ...prevState[field.name], error: true },
         }));
         hasError = true;
+      } else if (field.validation?.match?.value) {
+        const confirmPassword = signupState[field.name].value;
+        if (signupState["password"].value !== confirmPassword) {
+          setSignupState((prevState: any) => ({
+            ...prevState,
+            [field.name]: { ...prevState[field.name], error: true },
+          }));
+          hasError = true;
+        }
       }
     });
 
     if (!hasError) {
-      const formData: any = {};
-      fields.forEach((field) => {
-        formData[field.name] = loginState[field.name].value;
-      });
-      login(formData);
+      console.log(signupState);
+      createAccount();
     }
   };
 
-  const login = async (formData: AuthData) => {
-    const { email, password } = formData;
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        console.log(error);
-        throw new Error(error.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  //handle Signup API Integration here
+  const createAccount = () => {
+    const formData: any = {};
+    fields.forEach((field) => {
+      if (field.name !== "confirm_password")
+        formData[field.name] = signupState[field.name].value;
+    });
+    // signUp(formData);
   };
 
   return (
@@ -115,7 +111,7 @@ export default function LoginForm() {
                 }
                 placeholder={field.placeholder}
                 onChangeText={(text) => handleChange(field.name, text)}
-                value={loginState[field.name].name}
+                value={signupState[field.name].name}
               />
               {field.type === "password" && (
                 <InputIcon pr="$3" onPress={handleState}>
@@ -128,12 +124,11 @@ export default function LoginForm() {
             </Input>
           </View>
         ))}
-        <View style={{ marginTop: 50, marginBottom: 30 }}>
-          <ActionButton text="Login" action={handleSubmit} />
-        </View>
       </FormControl>
     </View>
   );
-}
+};
+
+export default SignupForm;
 
 const styles = StyleSheet.create({});

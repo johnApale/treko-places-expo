@@ -20,8 +20,6 @@ const ExpoSecureStoreAdapter = {
 const supabaseUrl = SUPABASE_URL as string;
 const supabaseAnonKey = SUPABASE_ANON_KEY as string;
 
-console.log(supabaseUrl, supabaseUrl);
-
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: ExpoSecureStoreAdapter as any,

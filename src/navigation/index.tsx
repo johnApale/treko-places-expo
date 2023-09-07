@@ -5,8 +5,8 @@ import MainStackNavigator from "./MainStackNavigator";
 import AuthStackNavigator from "./AuthStackNavigator";
 
 export default () => {
-  const auth = useAuth();
-  const user = auth.user;
+  const { user } = useAuth();
+
   // const [user, setUser] = useState(true);
   return (
     <NavigationContainer>

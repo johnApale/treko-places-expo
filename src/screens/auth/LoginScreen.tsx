@@ -1,8 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Divider } from "@gluestack-ui/themed";
+
 import ScreenTitle from "../../components/shared/ScreenTitle";
 import LoginForm from "../../components/auth/LoginForm";
 import OAuthButton from "../../components/auth/OAuthButton";
-import { Divider } from "@gluestack-ui/themed";
 import ActionButton from "../../components/shared/ActionButton";
 import { Text as textStyle } from "../../styles";
 import { AuthNavigationProp } from "../../types";
@@ -25,9 +26,7 @@ const LoginScreen = ({ navigation }: AuthNavigationProp) => {
       <OAuthButton provider="Google" />
       <Divider marginTop={30}></Divider>
       <LoginForm />
-      <View style={{ marginTop: 50, marginBottom: 30 }}>
-        <ActionButton text="Login" action={handleLogin} />
-      </View>
+
       <View style={styles.linksContainer}>
         <Pressable onPress={navigateToSignup}>
           <Text style={{ ...(textStyle.link as any) }}>Create an account</Text>

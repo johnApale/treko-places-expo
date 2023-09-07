@@ -24,3 +24,10 @@ export type AddFormType = {
   description: string;
   tags: [string];
 };
+
+export type AuthData = {
+  email: string;
+  password: string;
+  first_name?: string;
+  last_name?: string;
+};
