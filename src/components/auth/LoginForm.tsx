@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
+  AlertCircleIcon,
   EyeIcon,
   EyeOffIcon,
   FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
   Icon,
   Input,
   InputField,
@@ -13,6 +17,11 @@ import {
 import { loginFields } from "../../constants/authFields";
 import ActionButton from "../shared/ActionButton";
 import { useAuth } from "../../contexts/AuthProvider";
+import { AuthError } from "@supabase/supabase-js";
+
+type LoginProps = {
+  setLoginError: (message: string) => void;
+};
 
 const fields = loginFields;
 const fieldsState: any = {};
@@ -20,9 +29,10 @@ loginFields.forEach((field) => {
   fieldsState[field.name] = { value: "", error: false };
 });
 
-export default function LoginForm() {
+export default function LoginForm({ setLoginError }: LoginProps) {
   const [loginState, setLoginState] = useState(fieldsState);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<any>();
 
   const { signIn } = useAuth();
 
@@ -39,7 +49,7 @@ export default function LoginForm() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let hasError = false;
 
     // Implement form validation based on your loginFields configuration
@@ -79,7 +89,10 @@ export default function LoginForm() {
       fields.forEach((field) => {
         formData[field.name] = loginState[field.name].value;
       });
-      signIn(formData);
+      const error = await signIn(formData);
+      if (error) {
+        setLoginError(error);
+      }
     }
   };
 
@@ -110,8 +123,24 @@ export default function LoginForm() {
                 </InputIcon>
               )}
             </Input>
+            {loginState[field.name].error && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginTop: 10,
+                  marginBottom: -15,
+                  alignItems: "center",
+                }}
+              >
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>
+                  {field.validation?.message}
+                </FormControlErrorText>
+              </View>
+            )}
           </View>
         ))}
+
         <View style={{ marginTop: 50, marginBottom: 30 }}>
           <ActionButton text="Login" action={handleSubmit} />
         </View>

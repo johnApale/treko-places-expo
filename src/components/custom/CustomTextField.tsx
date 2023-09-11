@@ -1,12 +1,22 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { TextInput } from "react-native";
 import React, { useState } from "react";
+import { AddFormType } from "../../types";
 
 type TextFieldProps = {
   placeholder: string;
+  formData: AddFormType | undefined | null;
+  updateFormData: (updatedData: any) => void;
+  setDropdownVisible: (visible: boolean) => void;
 };
-const CustomTextField = ({ placeholder }: TextFieldProps) => {
+const CustomTextField = ({
+  placeholder,
+  formData,
+  updateFormData,
+  setDropdownVisible,
+}: TextFieldProps) => {
   const [textFieldFocus, setTextFieldFocus] = useState(false);
   const textFieldStyle = {
+    flex: 1,
     height: 100,
     padding: 10,
     backgroundColor: "white",
@@ -14,6 +24,11 @@ const CustomTextField = ({ placeholder }: TextFieldProps) => {
     borderWidth: 1,
     borderRadius: 3,
   };
+
+  const handleChange = (text: string) => {
+    updateFormData({ description: text });
+  };
+
   return (
     <>
       <TextInput
@@ -23,11 +38,14 @@ const CustomTextField = ({ placeholder }: TextFieldProps) => {
         placeholderTextColor={"gray"}
         onFocus={() => {
           setTextFieldFocus(true);
+          setDropdownVisible(false);
         }}
         onBlur={() => {
           setTextFieldFocus(false);
         }}
-      ></TextInput>
+        value={formData?.description || ""}
+        onChangeText={(text) => handleChange(text)}
+      />
     </>
   );
 };

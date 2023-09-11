@@ -18,11 +18,21 @@ export interface AuthNavigationProp {
 }
 
 export type AddFormType = {
-  photo_uri: string;
+  photo_path: string;
   name: string;
-  category: [string];
+  category: [number];
   description: string;
   tags: [string];
+};
+
+export type AddressType = {
+  street_address: string | undefined;
+  city: string | undefined;
+  state: string | undefined;
+  postalCode: string | undefined;
+  country: string | undefined;
+  longitude: number | undefined;
+  latitude: number | undefined;
 };
 
 export type AuthData = {

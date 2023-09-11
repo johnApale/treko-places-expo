@@ -11,10 +11,14 @@ import {
 import { Feather } from "@expo/vector-icons";
 
 interface TagInputProps {
-  onTagAdded: (tag: string) => void;
+  updateFormData: (updatedData: any) => void;
+  setDropdownVisible: (visible: boolean) => void;
 }
 
-const Tag: React.FC<TagInputProps> = ({ onTagAdded }) => {
+const Tag: React.FC<TagInputProps> = ({
+  updateFormData,
+  setDropdownVisible,
+}) => {
   const [tags, setTags] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isInputFocused, setInputFocused] = useState(false);
@@ -27,7 +31,9 @@ const Tag: React.FC<TagInputProps> = ({ onTagAdded }) => {
 
   const handleInputSubmit = () => {
     if (inputValue.trim() !== "") {
-      setTags([...tags, inputValue]);
+      const updatedTags = [...tags, inputValue];
+      setTags(updatedTags);
+      updateFormData({ tags: updatedTags });
       setInputValue("");
     }
     setInputFocused(false);
@@ -36,10 +42,12 @@ const Tag: React.FC<TagInputProps> = ({ onTagAdded }) => {
   const handleTagRemove = (tagToRemove: string) => {
     const updatedTags = tags.filter((tag) => tag !== tagToRemove);
     setTags(updatedTags);
+    updateFormData({ tags: updatedTags });
   };
 
   const handlePressed = () => {
     inputRef.current?.blur(); // Remove focus from current input if any
+    setDropdownVisible(false);
     setInputFocused(true);
     setTimeout(() => {
       inputRef.current?.focus(); // Focus on the TextInput after a delay
@@ -69,7 +77,10 @@ const Tag: React.FC<TagInputProps> = ({ onTagAdded }) => {
             value={inputValue}
             onChangeText={handleInputChange}
             onSubmitEditing={handleInputSubmit}
-            onFocus={() => setInputFocused(true)}
+            onFocus={() => {
+              setInputFocused(true);
+              setDropdownVisible(false);
+            }}
             onBlur={() => setInputFocused(false)}
           />
         ) : (

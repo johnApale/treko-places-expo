@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Session, User } from "@supabase/supabase-js";
+import { AuthError, Session, User } from "@supabase/supabase-js";
 
 import { supabase } from "../../lib/supabase";
 import { AuthData } from "../types";
@@ -8,8 +8,8 @@ type ContextProps = {
   user: User | null | undefined;
   session: Session | null;
   // isLoading: boolean;
-  signIn: (authData: AuthData) => Promise<void>;
-  signup: (authData: AuthData) => Promise<void>;
+  signIn: (authData: AuthData) => Promise<string | undefined>;
+  signup: (authData: AuthData) => Promise<string | undefined>;
   signOut: () => Promise<void>;
 };
 
@@ -41,7 +41,6 @@ const AuthProvider = ({ children }: Props) => {
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log(`Supabase auth event: ${event}`);
         setSession(session);
         setUser(session?.user);
         setIsLoading(false);
@@ -64,8 +63,7 @@ const AuthProvider = ({ children }: Props) => {
       });
 
       if (error) {
-        console.log(error);
-        throw new Error(error.message);
+        return error.message;
       }
       setUser(data.user ?? undefined);
     } catch (error) {
@@ -88,8 +86,7 @@ const AuthProvider = ({ children }: Props) => {
       });
 
       if (error) {
-        console.log(error);
-        throw new Error(error.message);
+        return error.message;
       }
       setUser(data.user ?? undefined);
     } catch (error) {

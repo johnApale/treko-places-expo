@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,52 +6,86 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
 import { SearchIcon } from "@gluestack-ui/themed";
+import { getCategories } from "../../helpers/categoryOptions";
+import { Categories } from "../../types/supabase";
 
 interface MultiselectDropdownProps {
-  options: string[];
+  updateFormData: (updatedData: any) => void;
+  isDropdownVisible: boolean;
+  setDropdownVisible: (visible: boolean) => void;
+  selectedOptions: Categories[];
+  setSelectedOptions: (selectedOption: Categories[]) => void;
 }
 
 const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
-  options,
+  updateFormData,
+  isDropdownVisible,
+  setDropdownVisible,
+  selectedOptions,
+  setSelectedOptions,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<Categories[] | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [isInputFocused, setInputFocused] = useState(false);
   const inputRef = useRef<TextInput>(null);
 
-  const toggleOption = (option: string) => {
+  const fetchData = async () => {
+    try {
+      const data = await getCategories();
+      if (data instanceof Error) {
+        console.log(data);
+      } else {
+        setOptions(data);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const toggleOption = (option: Categories) => {
     if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+      const updatedOptions = selectedOptions.filter((item) => item !== option);
+      setSelectedOptions(updatedOptions);
+      const selectedIds = updatedOptions.map((option) => option.id);
+      updateFormData({ category: selectedIds });
     } else {
       setSelectedOptions([...selectedOptions, option]);
+      const selectedIds = selectedOptions.map((option) => option.id);
+      selectedIds.push(option.id);
+      updateFormData({ category: selectedIds });
     }
 
     setSearchQuery("");
-    setTimeout(() => {
-      inputRef.current?.focus(); // Focus on the TextInput after a delay
-    }, 200);
   };
 
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredOptions = options?.filter((option: Categories) =>
+    option.category_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleInputSubmit = () => {
     if (searchQuery.trim() !== "") {
-      if (filteredOptions.includes(searchQuery)) {
-        toggleOption(searchQuery);
+      const selectedOption = options?.find(
+        (option: Categories) =>
+          option?.category_name.toLowerCase() === searchQuery.toLowerCase()
+      );
+
+      if (selectedOption) {
+        toggleOption(selectedOption);
       } else {
-        setSelectedOptions([...selectedOptions, searchQuery]);
+        // If the option doesn't exist in the list, you might want to handle it accordingly.
+        // For example, display an error message or add it to a separate list.
       }
+
       setSearchQuery("");
-      setTimeout(() => {
-        inputRef.current?.focus(); // Focus on the TextInput after a delay
-      }, 200);
     }
   };
   const containerStyle = {
@@ -66,25 +100,22 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
 
   return (
     <>
-      <Pressable
-        style={containerStyle as any}
-        onPress={() => {
-          inputRef.current?.focus();
-        }}
-      >
+      <Pressable style={containerStyle as any}>
         <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={styles.tagContainer}>
-            {selectedOptions.map((tag, index) => (
-              <View key={index} style={styles.tag}>
-                <Text style={{ color: "white", fontSize: 10 }}>{tag}</Text>
-                <TouchableOpacity onPress={() => toggleOption(tag)}>
+            {selectedOptions.map((category) => (
+              <View key={category.id} style={styles.tag}>
+                <Text style={{ color: "white", fontSize: 10 }}>
+                  {category.category_name}
+                </Text>
+                <Pressable onPress={() => toggleOption(category)}>
                   <Feather
                     name="x"
                     size={12}
                     color="white"
                     style={{ paddingTop: 1, marginLeft: 5 }}
                   />
-                </TouchableOpacity>
+                </Pressable>
               </View>
             ))}
             <TextInput
@@ -99,14 +130,21 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
                 setSearchQuery(text);
                 setDropdownVisible(true);
               }}
-              onSubmitEditing={handleInputSubmit}
+              // onSubmitEditing={handleInputSubmit}
               onFocus={() => {
                 setInputFocused(true);
                 setDropdownVisible(true);
               }}
-              onBlur={() => {
-                setInputFocused(false);
-                setDropdownVisible(false);
+              onKeyPress={(e) => {
+                if (e.nativeEvent.key === "Backspace" && searchQuery === "") {
+                  // Check if backspace key was pressed and input is empty
+                  if (selectedOptions.length > 0) {
+                    // Remove the last option from the array
+                    const updatedCategory = selectedOptions.slice(0, -1);
+                    setSelectedOptions(updatedCategory);
+                    updateFormData({ category: updatedCategory });
+                  }
+                }
               }}
             />
           </View>
@@ -118,10 +156,13 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
 
       {isDropdownVisible && (
         <View style={styles.dropdownContainer}>
-          <View style={styles.dropdown}>
-            {filteredOptions.map((item) => (
-              <TouchableOpacity
-                key={filteredOptions.indexOf(item)}
+          <ScrollView
+            style={styles.dropdown}
+            // keyboardShouldPersistTaps="always"
+          >
+            {filteredOptions?.map((item: Categories) => (
+              <Pressable
+                key={item.id}
                 style={[
                   styles.option,
                   selectedOptions.includes(item) && styles.selectedOption,
@@ -139,11 +180,11 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
                     { fontSize: 12 },
                   ]}
                 >
-                  {item}
+                  {item.category_name}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             ))}
-          </View>
+          </ScrollView>
         </View>
       )}
     </>
@@ -179,6 +220,7 @@ const styles = StyleSheet.create({
   dropdown: {
     borderColor: "black",
     maxHeight: 150,
+    overflow: "scroll",
     backgroundColor: "white",
     width: "99%",
     borderBottomLeftRadius: 3, // Add some border radius

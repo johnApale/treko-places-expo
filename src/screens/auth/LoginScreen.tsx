@@ -1,5 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Divider } from "@gluestack-ui/themed";
+import {
+  AlertCircleIcon,
+  Divider,
+  FormControl,
+  FormControlErrorIcon,
+  FormControlErrorText,
+} from "@gluestack-ui/themed";
 
 import ScreenTitle from "../../components/shared/ScreenTitle";
 import LoginForm from "../../components/auth/LoginForm";
@@ -7,8 +13,10 @@ import OAuthButton from "../../components/auth/OAuthButton";
 import ActionButton from "../../components/shared/ActionButton";
 import { Text as textStyle } from "../../styles";
 import { AuthNavigationProp } from "../../types";
+import { useState } from "react";
 
 const LoginScreen = ({ navigation }: AuthNavigationProp) => {
+  const [loginError, setLoginError] = useState("");
   const handleLogin = () => {
     console.log("login");
   };
@@ -25,7 +33,7 @@ const LoginScreen = ({ navigation }: AuthNavigationProp) => {
       <ScreenTitle title="Log in" titleSize={32} />
       <OAuthButton provider="Google" />
       <Divider marginTop={30}></Divider>
-      <LoginForm />
+      <LoginForm setLoginError={setLoginError} />
 
       <View style={styles.linksContainer}>
         <Pressable onPress={navigateToSignup}>
@@ -35,6 +43,19 @@ const LoginScreen = ({ navigation }: AuthNavigationProp) => {
           <Text style={{ ...(textStyle.link as any) }}>Forgot Password?</Text>
         </Pressable>
       </View>
+      {loginError && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 20,
+          }}
+        >
+          <FormControlErrorIcon as={AlertCircleIcon} />
+          <FormControlErrorText>{loginError}</FormControlErrorText>
+        </View>
+      )}
     </View>
   );
 };
