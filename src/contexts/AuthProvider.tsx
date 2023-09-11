@@ -7,7 +7,7 @@ import { AuthData } from "../types";
 type ContextProps = {
   user: User | null | undefined;
   session: Session | null;
-  // isLoading: boolean;
+  isLoading: boolean;
   signIn: (authData: AuthData) => Promise<string | undefined>;
   signup: (authData: AuthData) => Promise<string | undefined>;
   signOut: () => Promise<void>;
@@ -55,6 +55,7 @@ const AuthProvider = ({ children }: Props) => {
   }, [user]);
 
   const signIn = async (formData: AuthData) => {
+    setIsLoading(true);
     const { email, password } = formData;
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -68,10 +69,13 @@ const AuthProvider = ({ children }: Props) => {
       setUser(data.user ?? undefined);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signup = async (formData: AuthData) => {
+    setIsLoading(true);
     const { email, password, first_name, last_name } = formData;
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -91,16 +95,19 @@ const AuthProvider = ({ children }: Props) => {
       setUser(data.user ?? undefined);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signOut = async () => {
-    console.log("signout");
+    setIsLoading(true);
     const { error } = await supabase.auth.signOut();
     if (error) {
       throw new Error(error.message);
     }
     setUser(undefined);
+    setIsLoading(false);
   };
 
   return (
@@ -111,6 +118,7 @@ const AuthProvider = ({ children }: Props) => {
         signIn,
         signup,
         signOut,
+        isLoading,
       }}
     >
       {children}

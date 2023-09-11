@@ -3,7 +3,23 @@ import { View, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 
-const LoadingOverlay = () => {
+type LoadingProps = {
+  solidBackground?: boolean;
+};
+const LoadingOverlay = ({ solidBackground }: LoadingProps) => {
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: solidBackground ? "#F2EBE3" : "rgba(0,0,0, .4)",
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      zIndex: 10,
+      paddingBottom: 60,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });
   return (
     <View style={styles.container}>
       <Animatable.View
@@ -18,17 +34,3 @@ const LoadingOverlay = () => {
 };
 
 export default LoadingOverlay;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0, .4)",
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    zIndex: 10,
-    paddingBottom: 60,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

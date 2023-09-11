@@ -4,21 +4,25 @@ import ActionButton from "../shared/ActionButton";
 import ScreenTitle from "../shared/ScreenTitle";
 import { MainNavigationProp } from "../../types";
 import { useAuth } from "../../contexts/AuthProvider";
+import LoadingOverlay from "../shared/LoadingOverlay";
 
 const Home = ({ navigation }: MainNavigationProp) => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const handlePress = () => {
     navigation.navigate("AddPlace");
   };
   return (
-    <View style={styles.container}>
-      <ScreenTitle
-        title={`Hey there, ${user?.user_metadata.first_name || "explorer"}!`}
-        textAlign="center"
-        description="Hit the button below to start your journey and unlock a world of possibilities."
-      />
-      <ActionButton text={"Add New Location"} action={handlePress} />
-    </View>
+    <>
+      {isLoading && <LoadingOverlay />}
+      <View style={styles.container}>
+        <ScreenTitle
+          title={`Hey there, ${user?.user_metadata.first_name || "explorer"}!`}
+          textAlign="center"
+          description="Hit the button below to start your journey and unlock a world of possibilities."
+        />
+        <ActionButton text={"Add New Location"} action={handlePress} />
+      </View>
+    </>
   );
 };
 
