@@ -192,6 +192,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
             console.log(location_result);
             if (!location_result) {
               console.log(location_result);
+              setSaveError("Trouble saving location. Try again later.");
               throw Error;
             }
           }
@@ -201,10 +202,6 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
           formData?.category
         );
         console.log(category_result);
-        // if (!category_result) {
-        //   console.log(category_result);
-        //   throw Error;
-        // }
 
         if (location_result || category_result) {
           console.log("Err: ", location_result, category_result);
@@ -220,6 +217,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
         }
       } catch (error) {
         console.log(error);
+        setSaveError("Trouble saving location. Try again later.");
       } finally {
         setIsLoading(false);
       }
