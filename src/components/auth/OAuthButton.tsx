@@ -4,6 +4,8 @@ import { Button, ButtonText } from "@gluestack-ui/themed";
 import { Feather } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthProvider";
 
+// Need to finish supabase workflow for OAUTH
+
 type OAuthProps = {
   provider: "Google" | "Apple" | "GitHub" | "Facebook";
   onClick?: () => void;

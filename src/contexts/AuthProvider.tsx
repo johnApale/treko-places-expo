@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { AuthError, Session, User } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 
 import { supabase } from "../../lib/supabase";
 import { AuthData } from "../types";
+
+// Need to finish supabase workflow for OAuth
 
 type ContextProps = {
   user: User | null | undefined;

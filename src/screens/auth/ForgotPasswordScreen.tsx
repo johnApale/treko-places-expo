@@ -6,6 +6,8 @@ import ActionButton from "../../components/shared/ActionButton";
 import { Text as textStyle } from "../../styles";
 import { AuthNavigationProp } from "../../types";
 
+// Need to finish supabase workflow
+
 const ForgotPasswordScreen = ({ navigation }: AuthNavigationProp) => {
   const handleLogin = () => {
     console.log("login");
