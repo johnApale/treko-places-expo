@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
+  AlertCircleIcon,
   FormControl,
+  FormControlErrorIcon,
   FormControlErrorText,
   FormControlHelper,
   FormControlHelperText,
@@ -47,9 +49,6 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   const [imageName, setImageName] = useState("");
   const [showAddress, setShowAddress] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [isFormComplete, setIsFormComplete] = useState<boolean | undefined>(
-    false
-  );
   const [errorMsg, setErrorMsg] = useState("");
   const [saveError, setSaveError] = useState("");
   const [addressData, setAddressData] = useState<
@@ -57,10 +56,6 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   >();
 
   const { user } = useAuth();
-
-  useEffect(() => {
-    setIsFormComplete(isFormValid(formData));
-  }, [formData]);
 
   const isFormValid = (formData: AddFormType | undefined | null) => {
     // Check if the required fields in `formData` are filled in
@@ -162,66 +157,72 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
 
   const handleSubmit = async () => {
     setDropdownVisible(false);
-    try {
-      setIsLoading(true);
-      const place_id = await createPlace(user, formData);
-      let location_result;
-      if (addressData) {
-        if (!addressData.latitude || !addressData.longitude) {
-          const coords = await Location.geocodeAsync(
-            `${addressData.street_address} ${addressData.city} ${addressData.state} ${addressData.country}`
-          );
-          const address = await Location.reverseGeocodeAsync({
-            longitude: coords[0].longitude,
-            latitude: coords[0].latitude,
-          });
-          let cleanAddress;
-          if (address[0]) {
-            cleanAddress = {
-              street_address: address[0].name || undefined,
-              city: address[0].city || undefined,
-              state: address[0].region || undefined,
-              postalCode: address[0].postalCode || undefined,
-              country: address[0].country || undefined,
+    if (!isFormValid(formData)) {
+      setSaveError("Missing required fields.");
+    } else {
+      try {
+        setIsLoading(true);
+        setSaveError("");
+        const place_id = await createPlace(user, formData);
+        let location_result;
+        if (addressData) {
+          if (!addressData.latitude || !addressData.longitude) {
+            const coords = await Location.geocodeAsync(
+              `${addressData.street_address} ${addressData.city} ${addressData.state} ${addressData.country}`
+            );
+            const address = await Location.reverseGeocodeAsync({
               longitude: coords[0].longitude,
               latitude: coords[0].latitude,
-            };
-          }
-          location_result = await createLocation(place_id, cleanAddress);
-        } else {
-          location_result = await createLocation(place_id, addressData);
-          console.log(location_result);
-          if (!location_result) {
+            });
+            let cleanAddress;
+            if (address[0]) {
+              cleanAddress = {
+                street_address: address[0].name || undefined,
+                city: address[0].city || undefined,
+                state: address[0].region || undefined,
+                postalCode: address[0].postalCode || undefined,
+                country: address[0].country || undefined,
+                longitude: coords[0].longitude,
+                latitude: coords[0].latitude,
+              };
+            }
+            location_result = await createLocation(place_id, cleanAddress);
+          } else {
+            location_result = await createLocation(place_id, addressData);
             console.log(location_result);
-            throw Error;
+            if (!location_result) {
+              console.log(location_result);
+              throw Error;
+            }
           }
         }
-      }
-      const category_result = await createPlacesCategories(
-        place_id,
-        formData?.category
-      );
-      console.log(category_result);
-      // if (!category_result) {
-      //   console.log(category_result);
-      //   throw Error;
-      // }
+        const category_result = await createPlacesCategories(
+          place_id,
+          formData?.category
+        );
+        console.log(category_result);
+        // if (!category_result) {
+        //   console.log(category_result);
+        //   throw Error;
+        // }
 
-      if (location_result || category_result) {
-        console.log("Err: ", location_result, category_result);
-        setSaveError("Trouble saving location. Try again later.");
-      } else {
-        // reset fields
-        setFormData(null);
-        setAddressData(null);
-        setSelectedOptions([]);
-        // update to completion screen
-        navigation.navigate("Confirmation");
+        if (location_result || category_result) {
+          console.log("Err: ", location_result, category_result);
+          setSaveError("Trouble saving location. Try again later.");
+        } else {
+          // reset fields
+          setFormData(null);
+          setAddressData(null);
+          setSelectedOptions([]);
+
+          // update to completion screen
+          navigation.navigate("Confirmation");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -414,14 +415,29 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                 setDropdownVisible={setDropdownVisible}
               />
             </FormControl>
+            {saveError && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 20,
+                  marginBottom: -30,
+                }}
+              >
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>{saveError}</FormControlErrorText>
+              </View>
+            )}
+            <View style={styles.buttonContainer}>
+              <ActionButton text="Submit Location" action={handleSubmit} />
+            </View>
           </View>
         </ScrollView>
-        <FormControlErrorText>{saveError}</FormControlErrorText>
-        {isFormComplete && (
-          <View style={styles.buttonContainer}>
-            <ActionButton text="Submit Location" action={handleSubmit} />
-          </View>
-        )}
+
+        {/* {isFormComplete && ( */}
+
+        {/* )} */}
       </View>
     </KeyboardAvoidingView>
   );
@@ -454,7 +470,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   buttonContainer: {
-    paddingBottom: 30,
-    paddingHorizontal: 20,
+    marginTop: 40,
+    paddingBottom: 40,
   },
 });

@@ -23,12 +23,11 @@ export const createPlace = async (
     if (data) {
       return data[0].id;
     } else {
-      console.log(error);
-      return null;
+      return error.message;
     }
   } catch (error) {
     console.log("Error writing to Places table: ", error);
-    return error;
+    return;
   }
 };
 
@@ -63,15 +62,15 @@ export const createLocation = async (
 
       if (error) {
         console.log(error);
+        return error.message;
       }
       return data;
     } else {
       console.log(error);
-      return;
+      return error.message;
     }
   } catch (error) {
     console.log("Error writing to Location table: ", error);
-    return error;
   }
 };
 
@@ -88,11 +87,10 @@ export const createPlacesCategories = async (
       .from("PlacesCategories")
       .insert(placeCategoryData);
     if (placeCategoryError) {
-      console.error("Error adding place tags:", placeCategoryError.message);
+      return placeCategoryError.message;
     }
   } catch (error) {
     console.log("Error writing to PlacesTags table: ", error);
-    return error;
   }
 };
 
@@ -122,7 +120,7 @@ export const uploadPhoto = async (photo_result: any): Promise<UploadResult> => {
 
     if (error) {
       console.log(error);
-      throw error;
+      return { path: null, name: null };
     }
 
     return {
