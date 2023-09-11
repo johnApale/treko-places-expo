@@ -47,6 +47,13 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends.",
           "cameraPermission": "Allow TREKO to access your camera"
         }
+       
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow TREKO to use your location."
+        }
       ]
     ]
   }
