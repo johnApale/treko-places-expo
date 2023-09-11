@@ -17,15 +17,15 @@ import { useState } from "react";
 
 const LoginScreen = ({ navigation }: AuthNavigationProp) => {
   const [loginError, setLoginError] = useState("");
-  const handleLogin = () => {
-    console.log("login");
-  };
+
   const navigateToSignup = () => {
     navigation.navigate("Signup");
+    setLoginError("");
   };
 
   const navigateToForgot = () => {
     navigation.navigate("ForgotPassword");
+    setLoginError("");
   };
 
   return (

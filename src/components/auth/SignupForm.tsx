@@ -1,9 +1,12 @@
 import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import {
+  AlertCircleIcon,
   EyeIcon,
   EyeOffIcon,
   FormControl,
+  FormControlErrorIcon,
+  FormControlErrorText,
   Icon,
   Input,
   InputField,
@@ -14,13 +17,17 @@ import { signupFields } from "../../constants/authFields";
 import ActionButton from "../shared/ActionButton";
 import { useAuth } from "../../contexts/AuthProvider";
 
+type SignupProps = {
+  setSignupError: (message: string) => void;
+};
+
 const fields = signupFields;
 let fieldsState: any = {};
 signupFields.forEach((field) => {
   fieldsState[field.name] = { value: "", error: false };
 });
 
-const SignupForm = () => {
+const SignupForm = ({ setSignupError }: SignupProps) => {
   const [signupState, setSignupState] = useState(fieldsState);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -90,13 +97,17 @@ const SignupForm = () => {
   };
 
   //handle Signup API Integration here
-  const createAccount = () => {
+  const createAccount = async () => {
     const formData: any = {};
     fields.forEach((field) => {
       if (field.name !== "confirm_password")
         formData[field.name] = signupState[field.name].value;
     });
-    signup(formData);
+
+    const error = await signup(formData);
+    if (error) {
+      setSignupError(error);
+    }
   };
 
   return (
@@ -126,6 +137,21 @@ const SignupForm = () => {
                 </InputIcon>
               )}
             </Input>
+            {signupState[field.name].error && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginTop: 10,
+                  marginBottom: -15,
+                  alignItems: "center",
+                }}
+              >
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>
+                  {field.validation?.message}
+                </FormControlErrorText>
+              </View>
+            )}
           </View>
         ))}
         <View style={{ marginTop: 50, marginBottom: 30 }}>

@@ -1,6 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { Divider } from "@gluestack-ui/themed";
+import React, { useState } from "react";
+import {
+  AlertCircleIcon,
+  Divider,
+  FormControlErrorIcon,
+  FormControlErrorText,
+} from "@gluestack-ui/themed";
 
 import ScreenTitle from "../../components/shared/ScreenTitle";
 import OAuthButton from "../../components/auth/OAuthButton";
@@ -10,11 +15,10 @@ import { AuthNavigationProp } from "../../types";
 import { Text as textStyle } from "../../styles";
 
 const SignupScreen = ({ navigation }: AuthNavigationProp) => {
-  const handleLogin = () => {
-    console.log("login");
-  };
+  const [signupError, setSignupError] = useState("");
   const navigateToSignup = () => {
     navigation.navigate("Login");
+    setSignupError("");
   };
 
   return (
@@ -22,7 +26,7 @@ const SignupScreen = ({ navigation }: AuthNavigationProp) => {
       <ScreenTitle title="Create an account" titleSize={32} />
       <OAuthButton provider="Google" />
       <Divider marginTop={30}></Divider>
-      <SignupForm />
+      <SignupForm setSignupError={setSignupError} />
 
       <View style={styles.linksContainer}>
         <Text style={{ marginRight: 5, color: "gray" }}>Have an account?</Text>
@@ -30,6 +34,20 @@ const SignupScreen = ({ navigation }: AuthNavigationProp) => {
           <Text style={{ ...(textStyle.link as any) }}>Log in</Text>
         </Pressable>
       </View>
+
+      {signupError && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 20,
+          }}
+        >
+          <FormControlErrorIcon as={AlertCircleIcon} />
+          <FormControlErrorText>{signupError}</FormControlErrorText>
+        </View>
+      )}
     </View>
   );
 };
