@@ -1,10 +1,10 @@
 import { View, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
-import { Feather } from "@expo/vector-icons";
-import { useAuth } from "../../contexts/AuthProvider";
+import * as AuthSession from "expo-auth-session";
 
-// Need to finish supabase workflow for OAUTH
+import { useAuth } from "../../contexts/AuthProvider";
+//@ts-ignore
 
 type OAuthProps = {
   provider: "Google" | "Apple" | "GitHub" | "Facebook";
@@ -14,7 +14,7 @@ type OAuthProps = {
 const OAuthButton = ({ provider, onClick }: OAuthProps) => {
   const [OAuth, setOAuth] = useState("");
   const [icon, setIcon] = useState<any>();
-  //   const { signInOAuth } = useAuth();
+  const { signInOAuth } = useAuth();
 
   useEffect(() => {
     if (provider === "Google") {
@@ -23,7 +23,7 @@ const OAuthButton = ({ provider, onClick }: OAuthProps) => {
     }
   }, []);
   const handleSubmit = async () => {
-    // signInOAuth(OAuth);
+    signInOAuth(OAuth);
   };
   return (
     <View>

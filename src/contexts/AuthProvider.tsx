@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Session, User } from "@supabase/supabase-js";
+import { Provider, Session, User } from "@supabase/supabase-js";
+import * as WebBrowser from "expo-web-browser";
+
+//@ts-ignore
+import { SUPABASE_URL } from "@env";
 
 import { supabase } from "../../lib/supabase";
 import { AuthData } from "../types";
@@ -12,6 +16,7 @@ type ContextProps = {
   isLoading: boolean;
   signIn: (authData: AuthData) => Promise<string | undefined>;
   signup: (authData: AuthData) => Promise<string | undefined>;
+  signInOAuth: (provider: string) => void;
   signOut: () => Promise<void>;
 };
 
@@ -69,6 +74,7 @@ const AuthProvider = ({ children }: Props) => {
         return error.message;
       }
       setUser(data.user ?? undefined);
+      setSession(data.session);
     } catch (error) {
       console.log(error);
     } finally {
@@ -95,6 +101,7 @@ const AuthProvider = ({ children }: Props) => {
         return error.message;
       }
       setUser(data.user ?? undefined);
+      setSession(data.session);
     } catch (error) {
       console.log(error);
     } finally {
@@ -103,13 +110,55 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   const signOut = async () => {
-    setIsLoading(true);
     const { error } = await supabase.auth.signOut();
     if (error) {
       throw new Error(error.message);
     }
     setUser(undefined);
-    setIsLoading(false);
+    setSession(null);
+  };
+
+  const signInOAuth = async (provider: string) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider as Provider,
+        options: {
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      });
+
+      const url = data.url;
+      if (!url) {
+        throw Error;
+      }
+      const response = await WebBrowser.openAuthSessionAsync(
+        url,
+        "treko-places://google-signin",
+        { showInRecents: true }
+      );
+
+      if (response.type === "success") {
+        const url = response.url;
+        const params = url.split("#")[1];
+        const accessToken = params.split("&")[0].split("=")[1];
+        const refreshToken = params.split("&")[2].split("=")[1];
+
+        const { data, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (error) {
+          throw Error;
+        }
+      }
+    } catch (error) {
+      return error;
+    } finally {
+      WebBrowser.maybeCompleteAuthSession();
+    }
   };
 
   return (
@@ -120,6 +169,7 @@ const AuthProvider = ({ children }: Props) => {
         signIn,
         signup,
         signOut,
+        signInOAuth,
         isLoading,
       }}
     >

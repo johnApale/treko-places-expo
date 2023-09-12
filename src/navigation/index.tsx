@@ -5,13 +5,13 @@ import MainStackNavigator from "./MainStackNavigator";
 import AuthStackNavigator from "./AuthStackNavigator";
 
 export default () => {
-  const { user } = useAuth();
+  const { session } = useAuth();
 
   // const [user, setUser] = useState(true);
   return (
     <NavigationContainer>
-      {!user && <AuthStackNavigator />}
-      {user && <MainStackNavigator />}
+      {!session && <AuthStackNavigator />}
+      {session && <MainStackNavigator />}
     </NavigationContainer>
   );
 };
