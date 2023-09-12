@@ -7,17 +7,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   Pressable,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 interface TagInputProps {
   updateFormData: (updatedData: any) => void;
   setDropdownVisible: (visible: boolean) => void;
+  scrollToPosition: (y: number) => void;
 }
 
 const Tag: React.FC<TagInputProps> = ({
   updateFormData,
   setDropdownVisible,
+  scrollToPosition,
 }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -47,6 +50,7 @@ const Tag: React.FC<TagInputProps> = ({
 
   const handlePressed = () => {
     inputRef.current?.blur(); // Remove focus from current input if any
+    scrollToPosition(1000);
     setDropdownVisible(false);
     setInputFocused(true);
     setTimeout(() => {

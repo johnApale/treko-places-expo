@@ -7,12 +7,16 @@ type TextFieldProps = {
   formData: AddFormType | undefined | null;
   updateFormData: (updatedData: any) => void;
   setDropdownVisible: (visible: boolean) => void;
+  scrollToPosition: (y: number) => void;
+  position: number;
 };
 const CustomTextField = ({
   placeholder,
   formData,
   updateFormData,
   setDropdownVisible,
+  scrollToPosition,
+  position,
 }: TextFieldProps) => {
   const [textFieldFocus, setTextFieldFocus] = useState(false);
   const textFieldStyle = {
@@ -28,7 +32,6 @@ const CustomTextField = ({
   const handleChange = (text: string) => {
     updateFormData({ description: text });
   };
-
   return (
     <>
       <TextInput
@@ -39,6 +42,8 @@ const CustomTextField = ({
         onFocus={() => {
           setTextFieldFocus(true);
           setDropdownVisible(false);
+          console.log(position);
+          scrollToPosition(position);
         }}
         onBlur={() => {
           setTextFieldFocus(false);

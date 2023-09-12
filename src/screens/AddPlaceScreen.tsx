@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -37,14 +37,16 @@ const AddPlaceScreen = ({ navigation }: MainNavigationProp) => {
   return (
     <>
       <AddPlaceHeader />
-      <View style={{ flex: 1 }}>
-        {isLoading && <LoadingOverlay solidBackground />}
-        {showInfoPrompt && !hideInfoPrompt ? (
-          <AddInfo onClose={handleCloseInfoPrompt} />
-        ) : (
-          <AddForm navigation={navigation} />
-        )}
-      </View>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" enabled>
+        <View style={{ flex: 1 }}>
+          {isLoading && <LoadingOverlay solidBackground />}
+          {showInfoPrompt && !hideInfoPrompt ? (
+            <AddInfo onClose={handleCloseInfoPrompt} />
+          ) : (
+            <AddForm navigation={navigation} />
+          )}
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 };

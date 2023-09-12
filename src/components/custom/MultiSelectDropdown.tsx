@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   TextInput,
   StyleSheet,
   Pressable,
@@ -20,6 +19,8 @@ interface MultiselectDropdownProps {
   setDropdownVisible: (visible: boolean) => void;
   selectedOptions: Categories[];
   setSelectedOptions: (selectedOption: Categories[]) => void;
+  scrollToPosition: (y: number) => void;
+  position: number;
 }
 
 const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
@@ -28,6 +29,8 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
   setDropdownVisible,
   selectedOptions,
   setSelectedOptions,
+  scrollToPosition,
+  position,
 }) => {
   const [options, setOptions] = useState<Categories[] | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,7 +103,12 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
 
   return (
     <>
-      <Pressable style={containerStyle as any}>
+      <Pressable
+        style={containerStyle as any}
+        onPress={() => {
+          inputRef.current?.focus();
+        }}
+      >
         <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={styles.tagContainer}>
             {selectedOptions.map((category) => (
@@ -134,6 +142,7 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
               onFocus={() => {
                 setInputFocused(true);
                 setDropdownVisible(true);
+                scrollToPosition(position);
               }}
               onKeyPress={(e) => {
                 if (e.nativeEvent.key === "Backspace" && searchQuery === "") {

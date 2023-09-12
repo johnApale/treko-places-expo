@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import {
   AlertCircleIcon,
@@ -27,35 +33,37 @@ const SignupScreen = ({ navigation }: AuthNavigationProp) => {
   return (
     <>
       {isLoading && <LoadingOverlay />}
-      <View style={styles.container}>
-        <ScreenTitle title="Create an account" titleSize={32} />
-        <OAuthButton provider="Google" />
-        <Divider marginTop={30}></Divider>
-        <SignupForm setSignupError={setSignupError} />
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" enabled>
+        <View style={styles.container}>
+          <ScreenTitle title="Create an account" titleSize={32} />
+          <OAuthButton provider="Google" />
+          <Divider marginTop={30}></Divider>
+          <SignupForm setSignupError={setSignupError} />
 
-        <View style={styles.linksContainer}>
-          <Text style={{ marginRight: 5, color: "gray" }}>
-            Have an account?
-          </Text>
-          <Pressable onPress={navigateToSignup}>
-            <Text style={{ ...(textStyle.link as any) }}>Log in</Text>
-          </Pressable>
-        </View>
-
-        {signupError && (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: 20,
-            }}
-          >
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>{signupError}</FormControlErrorText>
+          <View style={styles.linksContainer}>
+            <Text style={{ marginRight: 5, color: "gray" }}>
+              Have an account?
+            </Text>
+            <Pressable onPress={navigateToSignup}>
+              <Text style={{ ...(textStyle.link as any) }}>Log in</Text>
+            </Pressable>
           </View>
-        )}
-      </View>
+
+          {signupError && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingTop: 20,
+              }}
+            >
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>{signupError}</FormControlErrorText>
+            </View>
+          )}
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 };

@@ -1,4 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  KeyboardAvoidingView,
+} from "react-native";
 import {
   AlertCircleIcon,
   Divider,
@@ -10,7 +17,6 @@ import {
 import ScreenTitle from "../../components/shared/ScreenTitle";
 import LoginForm from "../../components/auth/LoginForm";
 import OAuthButton from "../../components/auth/OAuthButton";
-import ActionButton from "../../components/shared/ActionButton";
 import { Text as textStyle } from "../../styles";
 import { AuthNavigationProp } from "../../types";
 import { useState } from "react";
@@ -34,36 +40,45 @@ const LoginScreen = ({ navigation }: AuthNavigationProp) => {
   return (
     <>
       {isLoading && <LoadingOverlay />}
-      <View style={styles.container}>
-        <ScreenTitle title="Log in" titleSize={32} />
-        <OAuthButton provider="Google" />
-        <Divider marginTop={30}></Divider>
-        <LoginForm setLoginError={setLoginError} />
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" enabled>
+        <View style={styles.container}>
+          <Image
+            style={{ height: 50, width: 50, marginBottom: 30 }}
+            source={require("../../../assets/TREKO-logo.png")}
+          />
 
-        <View style={styles.linksContainer}>
-          <Pressable onPress={navigateToSignup}>
-            <Text style={{ ...(textStyle.link as any) }}>
-              Create an account
-            </Text>
-          </Pressable>
-          <Pressable onPress={navigateToForgot}>
-            <Text style={{ ...(textStyle.link as any) }}>Forgot Password?</Text>
-          </Pressable>
-        </View>
-        {loginError && (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: 20,
-            }}
-          >
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>{loginError}</FormControlErrorText>
+          <ScreenTitle title="Log in" titleSize={32} />
+          <OAuthButton provider="Google" />
+          <Divider marginTop={30}></Divider>
+          <LoginForm setLoginError={setLoginError} />
+
+          <View style={styles.linksContainer}>
+            <Pressable onPress={navigateToSignup}>
+              <Text style={{ ...(textStyle.link as any) }}>
+                Create an account
+              </Text>
+            </Pressable>
+            <Pressable onPress={navigateToForgot}>
+              <Text style={{ ...(textStyle.link as any) }}>
+                Forgot Password?
+              </Text>
+            </Pressable>
           </View>
-        )}
-      </View>
+          {loginError && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingTop: 20,
+              }}
+            >
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>{loginError}</FormControlErrorText>
+            </View>
+          )}
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 };

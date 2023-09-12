@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   AlertCircleIcon,
   FormControl,
@@ -49,11 +49,14 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   const [imageName, setImageName] = useState("");
   const [showAddress, setShowAddress] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isInputFocused, setInputFocused] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [saveError, setSaveError] = useState("");
   const [addressData, setAddressData] = useState<
     AddressType | undefined | null
   >();
+
+  const scrollViewRef = useRef<ScrollView | null>(null);
 
   const { user } = useAuth();
 
@@ -69,6 +72,14 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
       return true;
     }
     return false;
+  };
+
+  const scrollToPosition = (y: number) => {
+    if (scrollViewRef.current) {
+      console.log(y);
+      scrollViewRef.current.scrollTo({ y, animated: true });
+      // scrollViewRef.current.scrollToEnd({ animated: true });
+    }
   };
 
   const handleCamera = async () => {
@@ -203,18 +214,14 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
         );
         console.log(category_result);
 
-        if (location_result || category_result) {
-          console.log("Err: ", location_result, category_result);
-          setSaveError("Trouble saving location. Try again later.");
-        } else {
-          // reset fields
-          setFormData(null);
-          setAddressData(null);
-          setSelectedOptions([]);
+        // reset fields
+        setFormData(null);
+        setAddressData(null);
+        setSelectedOptions([]);
 
-          // update to completion screen
-          navigation.navigate("Confirmation");
-        }
+        // update to completion screen
+        navigation.navigate("Confirmation");
+        // }
       } catch (error) {
         console.log(error);
         setSaveError("Trouble saving location. Try again later.");
@@ -225,10 +232,13 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+    <>
       {isLoading && <LoadingOverlay />}
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={styles.scrollContent}
+        >
           <View style={styles.formContainer}>
             <FormControl>
               <FormControlLabel>
@@ -308,6 +318,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       value={addressData?.street_address}
                       onFocus={() => {
                         setDropdownVisible(false);
+                        scrollToPosition(140);
                       }}
                       onChangeText={(text) => {
                         handleAddressChange("street_address", text);
@@ -321,6 +332,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       value={addressData?.city}
                       onFocus={() => {
                         setDropdownVisible(false);
+                        scrollToPosition(200);
                       }}
                       onChangeText={(text) => {
                         handleAddressChange("city", text);
@@ -334,6 +346,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       value={addressData?.state}
                       onFocus={() => {
                         setDropdownVisible(false);
+                        scrollToPosition(250);
                       }}
                       onChangeText={(text) => {
                         handleAddressChange("state", text);
@@ -347,6 +360,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       value={addressData?.postalCode}
                       onFocus={() => {
                         setDropdownVisible(false);
+                        scrollToPosition(300);
                       }}
                       onChangeText={(text) => {
                         handleAddressChange("postalCode", text);
@@ -360,6 +374,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       value={addressData?.country}
                       onFocus={() => {
                         setDropdownVisible(false);
+                        scrollToPosition(350);
                       }}
                       onChangeText={(text) => {
                         handleAddressChange("country", text);
@@ -382,6 +397,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                   }}
                   onFocus={() => {
                     setDropdownVisible(false);
+                    scrollToPosition(!showAddress ? 180 : 450);
                   }}
                 />
               </Input>
@@ -389,13 +405,17 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
                 <FormControlLabelText>Category</FormControlLabelText>
               </FormControlLabel>
+
               <MultiSelectDropdown
                 updateFormData={updateFormData}
                 isDropdownVisible={isDropdownVisible}
                 setDropdownVisible={setDropdownVisible}
                 selectedOptions={selectedOptions}
                 setSelectedOptions={setSelectedOptions}
+                scrollToPosition={scrollToPosition}
+                position={!showAddress ? 280 : 550}
               />
+
               <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
                 <FormControlLabelText>Description</FormControlLabelText>
               </FormControlLabel>
@@ -404,6 +424,8 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                 formData={formData}
                 updateFormData={updateFormData}
                 setDropdownVisible={setDropdownVisible}
+                scrollToPosition={scrollToPosition}
+                position={!showAddress ? 390 : 650}
               />
               <FormControlLabel style={{ marginTop: 30, marginBottom: 15 }}>
                 <FormControlLabelText>Tags</FormControlLabelText>
@@ -411,6 +433,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               <Tag
                 updateFormData={updateFormData}
                 setDropdownVisible={setDropdownVisible}
+                scrollToPosition={scrollToPosition}
               />
             </FormControl>
             {saveError && (
@@ -432,12 +455,8 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
             </View>
           </View>
         </ScrollView>
-
-        {/* {isFormComplete && ( */}
-
-        {/* )} */}
       </View>
-    </KeyboardAvoidingView>
+    </>
   );
 };
 
@@ -469,6 +488,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 40,
-    paddingBottom: 40,
+    paddingBottom: 250,
   },
 });
