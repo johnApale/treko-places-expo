@@ -49,7 +49,6 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   const [imageName, setImageName] = useState("");
   const [showAddress, setShowAddress] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [isInputFocused, setInputFocused] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [saveError, setSaveError] = useState("");
   const [addressData, setAddressData] = useState<
@@ -134,7 +133,9 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   };
 
   const handleLocation = async () => {
-    const { coords } = await Location.getCurrentPositionAsync({});
+    const { coords } = await Location.getCurrentPositionAsync({
+      accuracy: Location.LocationAccuracy.BestForNavigation,
+    });
     const address = await Location.reverseGeocodeAsync({
       longitude: coords.longitude,
       latitude: coords.latitude,
