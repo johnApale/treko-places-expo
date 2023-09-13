@@ -9,13 +9,18 @@ resetFields.forEach((field) => {
   fieldsState[field.name] = { value: "", error: false };
 });
 
-const ForgotPasswordForm = () => {
+type ResetFormProps = {
+  setEmail: (email: string) => void;
+};
+
+const ForgotPasswordForm = ({ setEmail }: ResetFormProps) => {
   const [resetState, setResetState] = useState(fieldsState);
   const handleChange = (name: string, text: string) => {
     setResetState((prevState: any) => ({
       ...prevState,
       [name]: { ...prevState[name], value: text, error: false },
     }));
+    setEmail(text);
   };
 
   return (

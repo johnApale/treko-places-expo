@@ -3,11 +3,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignupScreen";
 import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
+import UpdatePasswordScreen from "../screens/auth/UpdatePasswordScreen";
 
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   ForgotPassword: undefined;
+  UpdatePassword: undefined;
 };
 
 const AuthStack = createNativeStackNavigator();
@@ -20,6 +22,10 @@ const AuthStackNavigator = () => {
       <AuthStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
+      />
+      <AuthStack.Screen
+        name="UpdatePassword"
+        component={UpdatePasswordScreen}
       />
     </AuthStack.Navigator>
   );
