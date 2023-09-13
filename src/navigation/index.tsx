@@ -7,7 +7,6 @@ import AuthStackNavigator from "./AuthStackNavigator";
 export default () => {
   const { session } = useAuth();
 
-  // const [user, setUser] = useState(true);
   return (
     <NavigationContainer>
       {!session && <AuthStackNavigator />}
