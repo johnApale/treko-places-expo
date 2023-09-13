@@ -1,10 +1,8 @@
 import { View, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
-import * as AuthSession from "expo-auth-session";
 
 import { useAuth } from "../../contexts/AuthProvider";
-//@ts-ignore
 
 type OAuthProps = {
   provider: "Google" | "Apple" | "GitHub" | "Facebook";
