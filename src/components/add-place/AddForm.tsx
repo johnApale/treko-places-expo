@@ -1,4 +1,5 @@
 import {
+  Alert,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AlertCircleIcon,
   FormControl,
@@ -35,6 +36,9 @@ import {
   createLocation,
   createPlace,
   createPlacesCategories,
+  getPlace,
+  updatePlace,
+  updateCategories,
   uploadPhoto,
 } from "../../helpers/addLocation";
 
@@ -45,19 +49,88 @@ import { Categories } from "../../types/supabase";
 const AddForm = ({ navigation }: MainNavigationProp) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<AddFormType | undefined | null>();
-  const [selectedOptions, setSelectedOptions] = useState<Categories[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Categories[] | undefined
+  >([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [imageName, setImageName] = useState("");
   const [showAddress, setShowAddress] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [saveError, setSaveError] = useState("");
+  const [photos, setPhotos] = useState<string[]>();
   const [addressData, setAddressData] = useState<
     AddressType | undefined | null
+  >();
+  const [existingAddress, setExistingAddress] = useState<
+    number | null | undefined
   >();
 
   const scrollViewRef = useRef<ScrollView | null>(null);
 
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (
+      addressData?.street_address &&
+      addressData?.city &&
+      addressData?.state &&
+      addressData?.postalCode &&
+      addressData?.country &&
+      !existingAddress
+    ) {
+      fetchData();
+    }
+  }, [addressData]);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const data = await getPlace(addressData);
+    if (data !== "error") {
+      setFormData({
+        photo_path: formData?.photo_path,
+        name: data.name,
+        category: data.category_id,
+        description: data?.description,
+        tags: data?.tags,
+      });
+      setSelectedOptions(data?.categories);
+      setTags(data.tags);
+      setPhotos(data.photos);
+      showAlert(data.id);
+    }
+    setIsLoading(false);
+  };
+
+  const showAlert = (id: number) => {
+    Alert.alert(
+      "Warning!",
+      "This location already exists in the database. Submitting this form will update the record. Do you wish to continue?",
+      [
+        {
+          text: "No",
+          onPress: () => {
+            setExistingAddress(null);
+            clearData();
+          },
+          style: "cancel",
+        },
+        { text: "Yes", onPress: () => setExistingAddress(id) },
+      ]
+    );
+  };
+
+  const clearData = () => {
+    setFormData(null);
+    setAddressData(null);
+    setSelectedOptions([]);
+    setExistingAddress(null);
+    setShowAddress(false);
+    setTags([]);
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
+  };
 
   const isFormValid = (formData: AddFormType | undefined | null) => {
     // Check if the required fields in `formData` are filled in
@@ -75,13 +148,13 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
 
   const scrollToPosition = (y: number) => {
     if (scrollViewRef.current) {
-      console.log(y);
       scrollViewRef.current.scrollTo({ y, animated: true });
       // scrollViewRef.current.scrollToEnd({ animated: true });
     }
   };
 
   const handleCamera = async () => {
+    setExistingAddress(null);
     setDropdownVisible(false);
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -136,6 +209,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
     const { coords } = await Location.getCurrentPositionAsync({
       accuracy: Location.LocationAccuracy.BestForNavigation,
     });
+
     const address = await Location.reverseGeocodeAsync({
       longitude: coords.longitude,
       latitude: coords.latitude,
@@ -167,6 +241,38 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
     }));
   };
 
+  const handleUpdate = async () => {
+    setDropdownVisible(false);
+    if (!isFormValid(formData)) {
+      setSaveError("Missing required fields.");
+    } else {
+      try {
+        setIsLoading(true);
+        setSaveError("");
+        const place_result = await updatePlace(
+          existingAddress,
+          user,
+          formData,
+          photos
+        );
+        const categories_result = await updateCategories(
+          existingAddress,
+          formData?.category
+        );
+        if (place_result === "error" || categories_result === "error") {
+          throw Error;
+        }
+        clearData();
+        navigation.navigate("Confirmation");
+      } catch (error) {
+        console.log(error);
+        setSaveError("Trouble updating location. Try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     setDropdownVisible(false);
     if (!isFormValid(formData)) {
@@ -176,6 +282,9 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
         setIsLoading(true);
         setSaveError("");
         const place_id = await createPlace(user, formData);
+        if (place_id === "error") {
+          throw Error;
+        }
         let location_result;
         if (addressData) {
           if (!addressData.latitude || !addressData.longitude) {
@@ -199,11 +308,12 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               };
             }
             location_result = await createLocation(place_id, cleanAddress);
+            if (location_result === "error") {
+              throw Error;
+            }
           } else {
             location_result = await createLocation(place_id, addressData);
-            console.log(location_result);
-            if (!location_result) {
-              console.log(location_result);
+            if (location_result === "error") {
               setSaveError("Trouble saving location. Try again later.");
               throw Error;
             }
@@ -213,13 +323,12 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
           place_id,
           formData?.category
         );
-        console.log(category_result);
+        if (category_result === "error") {
+          throw Error;
+        }
 
         // reset fields
-        setFormData(null);
-        setAddressData(null);
-        setSelectedOptions([]);
-
+        clearData();
         // update to completion screen
         navigation.navigate("Confirmation");
         // }
@@ -435,6 +544,8 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                 updateFormData={updateFormData}
                 setDropdownVisible={setDropdownVisible}
                 scrollToPosition={scrollToPosition}
+                tags={tags}
+                setTags={setTags}
               />
             </FormControl>
             {saveError && (
@@ -451,9 +562,15 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                 <FormControlErrorText>{saveError}</FormControlErrorText>
               </View>
             )}
-            <View style={styles.buttonContainer}>
-              <ActionButton text="Submit Location" action={handleSubmit} />
-            </View>
+            {existingAddress ? (
+              <View style={styles.buttonContainer}>
+                <ActionButton text="Update Location" action={handleUpdate} />
+              </View>
+            ) : (
+              <View style={styles.buttonContainer}>
+                <ActionButton text="Submit Location" action={handleSubmit} />
+              </View>
+            )}
           </View>
         </ScrollView>
       </View>

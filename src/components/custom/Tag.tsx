@@ -15,14 +15,17 @@ interface TagInputProps {
   updateFormData: (updatedData: any) => void;
   setDropdownVisible: (visible: boolean) => void;
   scrollToPosition: (y: number) => void;
+  tags: string[];
+  setTags: (tag: string[]) => void;
 }
 
 const Tag: React.FC<TagInputProps> = ({
   updateFormData,
   setDropdownVisible,
   scrollToPosition,
+  tags,
+  setTags,
 }) => {
-  const [tags, setTags] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isInputFocused, setInputFocused] = useState(false);
 

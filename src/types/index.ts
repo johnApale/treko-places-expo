@@ -18,9 +18,9 @@ export interface AuthNavigationProp {
 }
 
 export type AddFormType = {
-  photo_path: string;
+  photo_path: string | undefined;
   name: string;
-  category: [number];
+  category: number[] | undefined;
   description: string;
   tags: [string];
 };

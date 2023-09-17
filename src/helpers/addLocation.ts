@@ -23,11 +23,12 @@ export const createPlace = async (
     if (data) {
       return data[0].id;
     } else {
-      return error.message;
+      console.log("Places error", error.message);
+      throw Error;
     }
   } catch (error) {
     console.log("Error writing to Places table: ", error);
-    return;
+    return "error";
   }
 };
 
@@ -61,16 +62,17 @@ export const createLocation = async (
         .eq("id", place_id);
 
       if (error) {
-        console.log(error);
-        return error.message;
+        console.log("Location Error", error.message);
+        return "error";
       }
       return data;
     } else {
       console.log(error);
-      return error.message;
+      return "error";
     }
   } catch (error) {
     console.log("Error writing to Location table: ", error);
+    return "error";
   }
 };
 
@@ -87,7 +89,8 @@ export const createPlacesCategories = async (
       .from("PlacesCategories")
       .insert(placeCategoryData);
     if (placeCategoryError) {
-      return placeCategoryError.message;
+      console.log("PlacesCategories Error", placeCategoryError.message);
+      return "error";
     }
   } catch (error) {
     console.log("Error writing to PlacesTags table: ", error);
@@ -131,5 +134,109 @@ export const uploadPhoto = async (photo_result: any): Promise<UploadResult> => {
     console.log(error);
     return { path: null, name: null };
     // return error;
+  }
+};
+
+export const getPlace = async (addressData: AddressType | undefined | null) => {
+  try {
+    const { data, error } = await supabase
+      .from("Locations")
+      .select("place_id")
+      .eq("street_address", addressData?.street_address)
+      .eq("city", addressData?.city)
+      .eq("state", addressData?.state)
+      .eq("postal_code", addressData?.postalCode);
+
+    if (error) {
+      console.log("LocationError:", error.message);
+      throw Error;
+    } else {
+      const { data: PlaceData, error: PlaceError } = await supabase
+        .from("Places")
+        .select("*")
+        .eq("id", data[0].place_id);
+      if (PlaceError) {
+        console.log(PlaceError);
+        throw Error;
+      }
+      const { data: CategoryData, error: CategoryError } = await supabase
+        .from("PlacesCategories")
+        .select("*, Categories !inner(*)")
+        .eq("place_id", PlaceData[0].id);
+      const categoriesResult = CategoryData?.map((item) => item.Categories);
+      const result = {
+        id: PlaceData[0].id,
+        name: PlaceData[0].name,
+        description: PlaceData[0].description,
+        tags: PlaceData[0].tags,
+        category_id: categoriesResult?.map((category) => category.id as number),
+        categories: categoriesResult,
+        photos: PlaceData[0].photos,
+      };
+      return result;
+    }
+  } catch (error) {
+    return "error";
+  }
+};
+
+export const updatePlace = async (
+  id: number | null | undefined,
+  user: User | null | undefined,
+  formData: AddFormType | undefined | null,
+  photos: string[] | undefined
+) => {
+  try {
+    let updatedPhotos;
+    if (photos) {
+      updatedPhotos = [...photos, formData?.photo_path];
+    }
+    const currentTimestamp = new Date().toISOString();
+    const { data, error } = await supabase
+      .from("Places")
+      .update({
+        name: formData?.name,
+        description: formData?.description,
+        tags: formData?.tags,
+        photos: updatedPhotos,
+        updated_by: user?.id,
+        updated_at: currentTimestamp,
+      })
+      .eq("id", id)
+      .select();
+    if (error) {
+      console.log(error);
+      throw Error;
+    }
+  } catch (error) {
+    return "error";
+  }
+};
+
+export const updateCategories = async (
+  id: number | null | undefined,
+  categories: number[] | undefined
+) => {
+  try {
+    const { data, error } = await supabase
+      .from("PlacesCategories")
+      .delete()
+      .eq("place_id", id);
+    if (error) {
+      throw Error;
+    }
+    const placeCategoryData = categories?.map((category_id) => ({
+      place_id: id,
+      category_id: category_id,
+    }));
+    const { data: _updateData, error: updateError } = await supabase
+      .from("PlacesCategories")
+      .insert(placeCategoryData);
+
+    if (updateError) {
+      throw Error;
+    }
+  } catch (error) {
+    return "error";
   }
 };

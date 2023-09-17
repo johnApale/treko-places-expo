@@ -17,7 +17,7 @@ interface MultiselectDropdownProps {
   updateFormData: (updatedData: any) => void;
   isDropdownVisible: boolean;
   setDropdownVisible: (visible: boolean) => void;
-  selectedOptions: Categories[];
+  selectedOptions: Categories[] | undefined;
   setSelectedOptions: (selectedOption: Categories[]) => void;
   scrollToPosition: (y: number) => void;
   position: number;
@@ -55,16 +55,18 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
   }, []);
 
   const toggleOption = (option: Categories) => {
-    if (selectedOptions.includes(option)) {
+    if (selectedOptions?.includes(option)) {
       const updatedOptions = selectedOptions.filter((item) => item !== option);
       setSelectedOptions(updatedOptions);
       const selectedIds = updatedOptions.map((option) => option.id);
       updateFormData({ category: selectedIds });
     } else {
-      setSelectedOptions([...selectedOptions, option]);
-      const selectedIds = selectedOptions.map((option) => option.id);
-      selectedIds.push(option.id);
-      updateFormData({ category: selectedIds });
+      if (selectedOptions) {
+        setSelectedOptions([...selectedOptions, option]);
+        const selectedIds = selectedOptions?.map((option) => option.id);
+        selectedIds?.push(option.id);
+        updateFormData({ category: selectedIds });
+      }
     }
 
     setSearchQuery("");
@@ -98,7 +100,7 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
     borderColor: isInputFocused ? "#547ca4" : "#D9D9D9",
     borderRadius: 4,
     paddingHorizontal: 10,
-    paddingVertical: selectedOptions.length === 0 ? 10 : 7,
+    paddingVertical: selectedOptions?.length === 0 ? 10 : 7,
   };
 
   return (
@@ -111,7 +113,7 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
       >
         <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={styles.tagContainer}>
-            {selectedOptions.map((category) => (
+            {selectedOptions?.map((category) => (
               <View key={category.id} style={styles.tag}>
                 <Text style={{ color: "white", fontSize: 10 }}>
                   {category.category_name}
@@ -130,7 +132,7 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
               style={styles.input}
               ref={inputRef}
               placeholder={
-                selectedOptions.length === 0 ? "Select Category" : ""
+                selectedOptions?.length === 0 ? "Select Category" : ""
               }
               placeholderTextColor={"gray"}
               value={searchQuery}
@@ -147,7 +149,7 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
               onKeyPress={(e) => {
                 if (e.nativeEvent.key === "Backspace" && searchQuery === "") {
                   // Check if backspace key was pressed and input is empty
-                  if (selectedOptions.length > 0) {
+                  if (selectedOptions?.length && selectedOptions?.length > 0) {
                     // Remove the last option from the array
                     const updatedCategory = selectedOptions.slice(0, -1);
                     setSelectedOptions(updatedCategory);
@@ -174,18 +176,18 @@ const MultiselectDropdown: React.FC<MultiselectDropdownProps> = ({
                 key={item.id}
                 style={[
                   styles.option,
-                  selectedOptions.includes(item) && styles.selectedOption,
+                  selectedOptions?.includes(item) && styles.selectedOption,
                 ]}
                 onPress={() => toggleOption(item)}
               >
                 <Checkbox
-                  value={selectedOptions.includes(item)}
+                  value={selectedOptions?.includes(item)}
                   onValueChange={() => toggleOption(item)}
                   style={styles.checkbox} // Adjust styling
                 />
                 <Text
                   style={[
-                    selectedOptions.includes(item) && { color: "#E17858" },
+                    selectedOptions?.includes(item) && { color: "#E17858" },
                     { fontSize: 12 },
                   ]}
                 >
