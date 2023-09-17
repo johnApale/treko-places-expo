@@ -7,17 +7,23 @@ import { SUPABASE_URL } from "@env";
 
 import { supabase } from "../../lib/supabase";
 import { AuthData } from "../types";
+import { TokenType } from "expo-auth-session";
 
-// Need to finish supabase workflow for OAuth
+type TokenLogin = {
+  access_token: string;
+  refresh_token: string;
+};
 
 type ContextProps = {
   user: User | null | undefined;
   session: Session | null;
   isLoading: boolean;
+  setUser: (user: User) => void;
   signIn: (authData: AuthData) => Promise<string | undefined>;
   signup: (authData: AuthData) => Promise<string | undefined>;
   signInOAuth: (provider: string) => void;
   signOut: () => Promise<void>;
+  loginWithToken: (credentials: TokenLogin) => Promise<void>;
 };
 
 interface Props {
@@ -49,7 +55,6 @@ const AuthProvider = ({ children }: Props) => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
-        setUser(session?.user);
         setIsLoading(false);
       }
     );
@@ -150,6 +155,10 @@ const AuthProvider = ({ children }: Props) => {
           access_token: accessToken,
           refresh_token: refreshToken,
         });
+        const {
+          data: { user: supabaseUser },
+        } = await supabase.auth.refreshSession();
+        setUser(supabaseUser);
         if (error) {
           throw Error;
         }
@@ -161,16 +170,36 @@ const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const loginWithToken = async ({
+    access_token,
+    refresh_token,
+  }: TokenLogin) => {
+    const signIn = async () => {
+      await supabase.auth.setSession({
+        access_token,
+        refresh_token,
+      });
+
+      return await supabase.auth.refreshSession();
+    };
+
+    const {
+      data: { user: supabaseUser },
+    } = await signIn();
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         session,
+        setUser,
         signIn,
         signup,
         signOut,
         signInOAuth,
         isLoading,
+        loginWithToken,
       }}
     >
       {children}

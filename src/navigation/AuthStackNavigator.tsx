@@ -4,6 +4,7 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignupScreen";
 import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 import UpdatePasswordScreen from "../screens/auth/UpdatePasswordScreen";
+import { useAuth } from "../contexts/AuthProvider";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -14,18 +15,28 @@ export type RootStackParamList = {
 
 const AuthStack = createNativeStackNavigator();
 
-const AuthStackNavigator = () => {
+const AuthStackNavigator = ({
+  error_description,
+}: {
+  error_description?: string | null;
+}) => {
+  const { user } = useAuth();
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      <AuthStack.Screen name="Login" component={LoginScreen} />
-      <AuthStack.Screen name="Signup" component={SignupScreen} />
+      {!user && (
+        <>
+          <AuthStack.Screen name="Login" component={LoginScreen} />
+          <AuthStack.Screen name="Signup" component={SignupScreen} />
+          <AuthStack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
+        </>
+      )}
       <AuthStack.Screen
-        name="ForgotPassword"
-        component={ForgotPasswordScreen}
-      />
-      <AuthStack.Screen
-        name="UpdatePassword"
+        name="UpdatePasswordScreen"
         component={UpdatePasswordScreen}
+        initialParams={{ message: error_description }}
       />
     </AuthStack.Navigator>
   );

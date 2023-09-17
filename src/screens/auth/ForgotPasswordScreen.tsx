@@ -20,7 +20,10 @@ import {
 
 // Need to finish supabase workflow
 
-const ForgotPasswordScreen = ({ navigation }: AuthNavigationProp) => {
+const ForgotPasswordScreen = ({
+  navigation,
+  error_description,
+}: AuthNavigationProp) => {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [sent, setSent] = useState(false);
@@ -66,6 +69,22 @@ const ForgotPasswordScreen = ({ navigation }: AuthNavigationProp) => {
             titleSize={32}
             description="Enter your email and we’ll send you instructions on how to reset your password."
           />
+          {error_description && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingBottom: 20,
+                paddingHorizontal: 20,
+              }}
+            >
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText style={{ marginLeft: 10 }}>
+                {error_description}
+              </FormControlErrorText>
+            </View>
+          )}
 
           <ForgotPasswordForm setEmail={setEmail} />
           <View style={{ marginTop: 40, marginBottom: 20 }}>

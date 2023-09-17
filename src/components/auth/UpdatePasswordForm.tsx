@@ -15,11 +15,24 @@ import {
 } from "@gluestack-ui/themed";
 import ActionButton from "../shared/ActionButton";
 
-const UpdatePasswordForm = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+type UpdatePasswordProps = {
+  password: string;
+  confirmPassword: string;
+  setPassword: (text: string) => void;
+  setConfirmPassword: (text: string) => void;
+  errorMessage: string;
+  setErrorMessage: (message: string) => void;
+};
+
+const UpdatePasswordForm = ({
+  password,
+  confirmPassword,
+  setConfirmPassword,
+  setPassword,
+  errorMessage,
+  setErrorMessage,
+}: UpdatePasswordProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleState = () => {
     setShowPassword((showState) => {
@@ -27,16 +40,6 @@ const UpdatePasswordForm = () => {
     });
   };
 
-  const handleUpdate = () => {
-    if (
-      password !== confirmPassword ||
-      password === "" ||
-      confirmPassword === ""
-    ) {
-      setErrorMessage("Invalid password entry. Please check and try again!");
-    } else {
-    }
-  };
   return (
     <View>
       <FormControl>
@@ -60,7 +63,7 @@ const UpdatePasswordForm = () => {
           </Input>
           <Input backgroundColor="white">
             <InputField
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Confirm Password"
               onChangeText={(text) => {
                 setErrorMessage("");
@@ -94,9 +97,6 @@ const UpdatePasswordForm = () => {
           </FormControlErrorText>
         </View>
       )}
-      <View style={{ marginTop: 40, marginBottom: 20 }}>
-        <ActionButton text="Change Password" action={handleUpdate} />
-      </View>
     </View>
   );
 };

@@ -1,6 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList as MainRootStack } from "../navigation/MainStackNavigator";
-import { RootStackParamList as AuthRootStack } from "../navigation/AuthStackNavigator";
+import {
+  RootStackParamList as AuthRootStack,
+  RootStackParamList,
+} from "../navigation/AuthStackNavigator";
+import { RouteProp } from "@react-navigation/native";
 
 type MainStackNavigationType = NativeStackNavigationProp<MainRootStack, "Home">;
 
@@ -15,6 +19,8 @@ type AuthStackNavigationType = NativeStackNavigationProp<
 
 export interface AuthNavigationProp {
   navigation: AuthStackNavigationType;
+  route?: any;
+  error_description?: string;
 }
 
 export type AddFormType = {
