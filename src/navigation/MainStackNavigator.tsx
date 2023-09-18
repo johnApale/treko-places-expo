@@ -15,28 +15,11 @@ export type RootStackParamList = {
 const MainStack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
-  const { user } = useAuth();
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>
       <MainStack.Screen name="Home" component={HomeScreen} />
       <MainStack.Screen name="AddPlace" component={AddPlaceScreen} />
       <MainStack.Screen name="Confirmation" component={ConfirmationScreen} />
-      {/* {user ? (
-        <>
-          <MainStack.Screen name="Home" component={HomeScreen} />
-          <MainStack.Screen name="AddPlace" component={AddPlaceScreen} />
-          <MainStack.Screen
-            name="Confirmation"
-            component={ConfirmationScreen}
-          />{" "}
-        </>
-      ) : (
-        <MainStack.Screen
-          name="UpdatePasswordScreen"
-          component={UpdatePasswordScreen}
-          initialParams={{ message: error_description }}
-        />
-      )} */}
     </MainStack.Navigator>
   );
 };

@@ -20,10 +20,10 @@ const AuthStackNavigator = ({
 }: {
   error_description?: string | null;
 }) => {
-  const { user } = useAuth();
+  const { isLoggedIn } = useAuth();
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      {!user && (
+      {!isLoggedIn && (
         <>
           <AuthStack.Screen name="Login" component={LoginScreen} />
           <AuthStack.Screen name="Signup" component={SignupScreen} />

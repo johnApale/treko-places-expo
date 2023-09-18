@@ -42,7 +42,6 @@ const CustomTextField = ({
         onFocus={() => {
           setTextFieldFocus(true);
           setDropdownVisible(false);
-          console.log(position);
           scrollToPosition(position);
         }}
         onBlur={() => {

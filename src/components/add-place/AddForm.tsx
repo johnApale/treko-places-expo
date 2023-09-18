@@ -48,10 +48,12 @@ import { Categories } from "../../types/supabase";
 
 const AddForm = ({ navigation }: MainNavigationProp) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isUpload, setIsUpload] = useState<boolean | null>();
   const [formData, setFormData] = useState<AddFormType | undefined | null>();
   const [selectedOptions, setSelectedOptions] = useState<
     Categories[] | undefined
   >([]);
+  const [photoData, setPhotoData] = useState<any>({});
   const [tags, setTags] = useState<string[]>([]);
   const [imageName, setImageName] = useState("");
   const [showAddress, setShowAddress] = useState(false);
@@ -84,7 +86,9 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   }, [addressData]);
 
   const fetchData = async () => {
-    setIsLoading(true);
+    if (isUpload) {
+      cleanAddress();
+    }
     const data = await getPlace(addressData);
     if (data !== "error") {
       setFormData({
@@ -99,7 +103,6 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
       setPhotos(data.photos);
       showAlert(data.id);
     }
-    setIsLoading(false);
   };
 
   const showAlert = (id: number) => {
@@ -123,10 +126,13 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   const clearData = () => {
     setFormData(null);
     setAddressData(null);
+    setPhotoData({});
+    setImageName("");
     setSelectedOptions([]);
     setExistingAddress(null);
     setShowAddress(false);
     setTags([]);
+    setIsUpload(null);
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
@@ -135,8 +141,8 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   const isFormValid = (formData: AddFormType | undefined | null) => {
     // Check if the required fields in `formData` are filled in
     if (
-      formData?.photo_path &&
-      formData.name &&
+      imageName &&
+      formData?.name &&
       formData.category &&
       formData.description &&
       formData.tags
@@ -155,6 +161,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
 
   const handleCamera = async () => {
     setExistingAddress(null);
+    setIsUpload(false);
     setDropdownVisible(false);
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -167,8 +174,11 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
         quality: 1,
       });
       if (!result.canceled) {
+        const photoName = result.assets[0].fileName;
         setIsLoading(true);
-        await handlePhoto(result);
+
+        setPhotoData(result);
+        setImageName(photoName || "image.jpg");
         await handleLocation();
         setIsLoading(false);
       }
@@ -179,29 +189,17 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
 
   const handleUpload = async () => {
     setDropdownVisible(false);
+    setIsUpload(true);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
     if (!result.canceled) {
       setIsLoading(true);
-      await handlePhoto(result);
+      const photoName = result.assets[0].fileName;
+      setPhotoData(result);
+      setImageName(photoName || "image.jpg");
       setIsLoading(false);
-    }
-  };
-
-  const handlePhoto = async (result: any) => {
-    try {
-      let { path, name } = await uploadPhoto(result);
-      if (path && name) {
-        setFormData((prevState: any) => ({
-          ...prevState,
-          photo_path: path,
-        }));
-        setImageName(name);
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -249,11 +247,22 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
       try {
         setIsLoading(true);
         setSaveError("");
+        const photo_result = await uploadPhoto(photoData);
+        if (photo_result !== "error") {
+          setFormData((prevState: any) => ({
+            ...prevState,
+            photo_path: photo_result,
+          }));
+        } else {
+          setSaveError("Error saving photo. Try again later.");
+          throw Error;
+        }
         const place_result = await updatePlace(
           existingAddress,
           user,
           formData,
-          photos
+          photos,
+          photo_result
         );
         const categories_result = await updateCategories(
           existingAddress,
@@ -273,6 +282,31 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
     }
   };
 
+  const cleanAddress = async () => {
+    if (addressData) {
+      if (!addressData.latitude || !addressData.longitude) {
+        const coords = await Location.geocodeAsync(
+          `${addressData.street_address} ${addressData.city} ${addressData.state} ${addressData.country}`
+        );
+        const address = await Location.reverseGeocodeAsync({
+          longitude: coords[0].longitude,
+          latitude: coords[0].latitude,
+        });
+        if (address[0]) {
+          setAddressData({
+            street_address: address[0].name || undefined,
+            city: address[0].city || undefined,
+            state: address[0].region || undefined,
+            postalCode: address[0].postalCode || undefined,
+            country: address[0].country || undefined,
+            longitude: coords[0].longitude,
+            latitude: coords[0].latitude,
+          });
+        }
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     setDropdownVisible(false);
     if (!isFormValid(formData)) {
@@ -281,42 +315,28 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
       try {
         setIsLoading(true);
         setSaveError("");
-        const place_id = await createPlace(user, formData);
+        const photo_result = await uploadPhoto(photoData);
+        if (photo_result !== "error") {
+          setFormData((prevState: any) => ({
+            ...prevState,
+            photo_path: photo_result,
+          }));
+        } else {
+          setSaveError("Error saving photo. Try again later.");
+          throw Error;
+        }
+
+        const place_id = await createPlace(user, photo_result, formData);
         if (place_id === "error") {
           throw Error;
         }
+
         let location_result;
         if (addressData) {
-          if (!addressData.latitude || !addressData.longitude) {
-            const coords = await Location.geocodeAsync(
-              `${addressData.street_address} ${addressData.city} ${addressData.state} ${addressData.country}`
-            );
-            const address = await Location.reverseGeocodeAsync({
-              longitude: coords[0].longitude,
-              latitude: coords[0].latitude,
-            });
-            let cleanAddress;
-            if (address[0]) {
-              cleanAddress = {
-                street_address: address[0].name || undefined,
-                city: address[0].city || undefined,
-                state: address[0].region || undefined,
-                postalCode: address[0].postalCode || undefined,
-                country: address[0].country || undefined,
-                longitude: coords[0].longitude,
-                latitude: coords[0].latitude,
-              };
-            }
-            location_result = await createLocation(place_id, cleanAddress);
-            if (location_result === "error") {
-              throw Error;
-            }
-          } else {
-            location_result = await createLocation(place_id, addressData);
-            if (location_result === "error") {
-              setSaveError("Trouble saving location. Try again later.");
-              throw Error;
-            }
+          location_result = await createLocation(place_id, addressData);
+          if (location_result === "error") {
+            setSaveError("Trouble saving location. Try again later.");
+            throw Error;
           }
         }
         const category_result = await createPlacesCategories(
@@ -333,8 +353,9 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
         navigation.navigate("Confirmation");
         // }
       } catch (error) {
-        console.log(error);
-        setSaveError("Trouble saving location. Try again later.");
+        if (saveError === "") {
+          setSaveError("Trouble saving location. Try again later.");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -364,7 +385,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                 <UploadButton action={handleCamera} buttonType="camera" />
                 <UploadButton action={handleUpload} buttonType="upload" />
               </View>
-              {formData?.photo_path && (
+              {imageName && (
                 <View style={styles.photoContainer}>
                   <TouchableOpacity
                     onPress={() => {

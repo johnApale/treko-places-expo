@@ -20,7 +20,7 @@ const parseSupabaseUrl = (url: string) => {
 };
 
 export default () => {
-  const { user, loginWithToken } = useAuth();
+  const { isLoggedIn, loginWithToken } = useAuth();
   const [error, setError] = useState("");
 
   const getInitialURL = async () => {
@@ -69,7 +69,7 @@ export default () => {
   };
   return (
     <NavigationContainer linking={linking}>
-      {user ? (
+      {isLoggedIn ? (
         <MainStackNavigator />
       ) : (
         <AuthStackNavigator error_description={error} />

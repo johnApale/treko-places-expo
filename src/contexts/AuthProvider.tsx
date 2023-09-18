@@ -16,6 +16,7 @@ type TokenLogin = {
 
 type ContextProps = {
   user: User | null | undefined;
+  isLoggedIn: boolean | null | undefined;
   session: Session | null;
   isLoading: boolean;
   setUser: (user: User) => void;
@@ -37,6 +38,7 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null | undefined>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>();
 
   useEffect(() => {
     const setData = async () => {
@@ -48,6 +50,7 @@ const AuthProvider = ({ children }: Props) => {
       if (session) {
         setSession(session);
         setUser(session?.user);
+        setIsLoggedIn(true);
         setIsLoading(false);
       }
     };
@@ -79,6 +82,7 @@ const AuthProvider = ({ children }: Props) => {
         return error.message;
       }
       setUser(data.user ?? undefined);
+      setIsLoggedIn(true);
       setSession(data.session);
     } catch (error) {
       console.log(error);
@@ -120,6 +124,7 @@ const AuthProvider = ({ children }: Props) => {
       throw new Error(error.message);
     }
     setUser(undefined);
+    setIsLoggedIn(false);
     setSession(null);
   };
 
@@ -158,6 +163,7 @@ const AuthProvider = ({ children }: Props) => {
         const {
           data: { user: supabaseUser },
         } = await supabase.auth.refreshSession();
+        setIsLoggedIn(true);
         setUser(supabaseUser);
         if (error) {
           throw Error;
@@ -200,6 +206,7 @@ const AuthProvider = ({ children }: Props) => {
         signInOAuth,
         isLoading,
         loginWithToken,
+        isLoggedIn,
       }}
     >
       {children}

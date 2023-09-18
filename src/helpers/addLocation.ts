@@ -5,6 +5,7 @@ import { AddFormType, AddressType } from "../types";
 
 export const createPlace = async (
   user: User | undefined | null,
+  photo_result: string,
   formData: AddFormType | undefined | null
 ) => {
   try {
@@ -15,7 +16,7 @@ export const createPlace = async (
           name: formData?.name,
           description: formData?.description,
           tags: formData?.tags,
-          photos: [formData?.photo_path],
+          photos: [photo_result],
           added_by: user?.id,
         },
       ])
@@ -102,7 +103,7 @@ interface UploadResult {
   name: string | null; // Adjust the type if necessary
 }
 
-export const uploadPhoto = async (photo_result: any): Promise<UploadResult> => {
+export const uploadPhoto = async (photo_result: any): Promise<string> => {
   try {
     const photo = {
       uri: photo_result.assets[0].uri,
@@ -123,17 +124,13 @@ export const uploadPhoto = async (photo_result: any): Promise<UploadResult> => {
 
     if (error) {
       console.log(error);
-      return { path: null, name: null };
+      throw Error;
+    } else {
+      return photoData?.path;
     }
-
-    return {
-      path: photoData?.path,
-      name: photo.name,
-    };
   } catch (error) {
     console.log(error);
-    return { path: null, name: null };
-    // return error;
+    return "error";
   }
 };
 
@@ -184,12 +181,13 @@ export const updatePlace = async (
   id: number | null | undefined,
   user: User | null | undefined,
   formData: AddFormType | undefined | null,
-  photos: string[] | undefined
+  photos: string[] | undefined,
+  photo_result: string
 ) => {
   try {
     let updatedPhotos;
     if (photos) {
-      updatedPhotos = [...photos, formData?.photo_path];
+      updatedPhotos = [...photos, photo_result];
     }
     const currentTimestamp = new Date().toISOString();
     const { data, error } = await supabase
