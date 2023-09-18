@@ -32,7 +32,7 @@ const ForgotPasswordForm = ({ setEmail }: ResetFormProps) => {
               <InputField
                 type="text"
                 placeholder={field.placeholder}
-                onChangeText={(text) => handleChange(field.name, text)}
+                onChangeText={(text: string) => handleChange(field.name, text)}
                 value={resetState[field.name].name}
               />
             </Input>

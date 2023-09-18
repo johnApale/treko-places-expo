@@ -155,7 +155,6 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
   const scrollToPosition = (y: number) => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y, animated: true });
-      // scrollViewRef.current.scrollToEnd({ animated: true });
     }
   };
 
@@ -451,7 +450,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                         setDropdownVisible(false);
                         scrollToPosition(140);
                       }}
-                      onChangeText={(text) => {
+                      onChangeText={(text: string) => {
                         handleAddressChange("street_address", text);
                       }}
                     />
@@ -465,7 +464,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                         setDropdownVisible(false);
                         scrollToPosition(200);
                       }}
-                      onChangeText={(text) => {
+                      onChangeText={(text: string) => {
                         handleAddressChange("city", text);
                       }}
                     />
@@ -479,7 +478,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                         setDropdownVisible(false);
                         scrollToPosition(250);
                       }}
-                      onChangeText={(text) => {
+                      onChangeText={(text: string) => {
                         handleAddressChange("state", text);
                       }}
                     />
@@ -493,7 +492,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                         setDropdownVisible(false);
                         scrollToPosition(300);
                       }}
-                      onChangeText={(text) => {
+                      onChangeText={(text: string) => {
                         handleAddressChange("postalCode", text);
                       }}
                     />
@@ -507,7 +506,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                         setDropdownVisible(false);
                         scrollToPosition(350);
                       }}
-                      onChangeText={(text) => {
+                      onChangeText={(text: string) => {
                         handleAddressChange("country", text);
                       }}
                     />
@@ -523,7 +522,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                   placeholder="Location name"
                   style={{ backgroundColor: "white", borderRadius: 3 }}
                   value={formData?.name}
-                  onChangeText={(text) => {
+                  onChangeText={(text: string) => {
                     updateFormData({ name: text });
                   }}
                   onFocus={() => {

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import {
   AlertCircleIcon,
@@ -125,16 +125,19 @@ const SignupForm = ({ setSignupError }: SignupProps) => {
                     : "text"
                 }
                 placeholder={field.placeholder}
-                onChangeText={(text) => handleChange(field.name, text)}
+                onChangeText={(text: string) => handleChange(field.name, text)}
                 value={signupState[field.name].name}
               />
               {field.type === "password" && (
-                <InputIcon pr="$3" onPress={handleState}>
+                <Pressable
+                  onPress={handleState}
+                  style={{ alignSelf: "center", padding: 10 }}
+                >
                   <Icon
                     as={showPassword ? EyeIcon : EyeOffIcon}
                     color="$darkBlue500"
                   />
-                </InputIcon>
+                </Pressable>
               )}
             </Input>
             {signupState[field.name].error && (

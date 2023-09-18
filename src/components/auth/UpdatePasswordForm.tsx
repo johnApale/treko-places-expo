@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 
 import {
@@ -48,35 +48,41 @@ const UpdatePasswordForm = ({
             <InputField
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              onChangeText={(text) => {
+              onChangeText={(text: string) => {
                 setErrorMessage("");
                 setPassword(text);
               }}
               value={password}
             />
-            <InputIcon pr="$3" onPress={handleState}>
+            <Pressable
+              onPress={handleState}
+              style={{ alignSelf: "center", padding: 10 }}
+            >
               <Icon
                 as={showPassword ? EyeIcon : EyeOffIcon}
                 color="$darkBlue500"
               />
-            </InputIcon>
+            </Pressable>
           </Input>
           <Input backgroundColor="white">
             <InputField
               type={showPassword ? "text" : "password"}
               placeholder="Confirm Password"
-              onChangeText={(text) => {
+              onChangeText={(text: string) => {
                 setErrorMessage("");
                 setConfirmPassword(text);
               }}
               value={confirmPassword}
             />
-            <InputIcon pr="$3" onPress={handleState}>
+            <Pressable
+              onPress={handleState}
+              style={{ alignSelf: "center", padding: 10 }}
+            >
               <Icon
                 as={showPassword ? EyeIcon : EyeOffIcon}
                 color="$darkBlue500"
               />
-            </InputIcon>
+            </Pressable>
           </Input>
         </View>
       </FormControl>
