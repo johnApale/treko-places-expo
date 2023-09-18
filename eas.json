@@ -8,6 +8,12 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
+        "resourceClass": "m-medium"
+      }
+    },
+    "develpment-simulator": {
+      "extends": "development",
+      "ios": {
         "simulator": true
       }
     },

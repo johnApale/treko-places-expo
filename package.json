@@ -17,7 +17,7 @@
     "@supabase/supabase-js": "^2.33.1",
     "expo": "~49.0.8",
     "expo-auth-session": "~5.0.2",
-    "expo-checkbox": "^2.4.0",
+    "expo-checkbox": "~2.4.0",
     "expo-crypto": "~12.4.1",
     "expo-dev-client": "~2.4.10",
     "expo-image-picker": "~14.3.2",
