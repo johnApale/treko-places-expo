@@ -1,7 +1,6 @@
 import { User } from "@supabase/supabase-js";
 import { supabase } from "../../lib/supabase";
 import { AddFormType, AddressType } from "../types";
-// };
 
 export const createPlace = async (
   user: User | undefined | null,

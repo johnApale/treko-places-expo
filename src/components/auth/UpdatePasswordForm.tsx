@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 
 import {
@@ -11,9 +11,7 @@ import {
   Icon,
   Input,
   InputField,
-  InputIcon,
 } from "@gluestack-ui/themed";
-import ActionButton from "../shared/ActionButton";
 
 type UpdatePasswordProps = {
   password: string;

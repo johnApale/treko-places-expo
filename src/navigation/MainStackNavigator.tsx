@@ -3,8 +3,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import AddPlaceScreen from "../screens/AddPlaceScreen";
 import ConfirmationScreen from "../screens/ConfirmationScreen";
-import UpdatePasswordScreen from "../screens/auth/UpdatePasswordScreen";
-import { useAuth } from "../contexts/AuthProvider";
 
 export type RootStackParamList = {
   Home: undefined;

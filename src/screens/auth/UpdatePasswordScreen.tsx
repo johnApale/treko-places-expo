@@ -7,16 +7,10 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import ScreenTitle from "../../components/shared/ScreenTitle";
-import ForgotPasswordForm from "../../components/auth/ForgotPasswordForm";
 import ActionButton from "../../components/shared/ActionButton";
 import { Text as textStyle } from "../../styles";
 import { AuthNavigationProp } from "../../types";
 import { supabase } from "../../../lib/supabase";
-import {
-  AlertCircleIcon,
-  FormControlErrorIcon,
-  FormControlErrorText,
-} from "@gluestack-ui/themed";
 import UpdatePasswordForm from "../../components/auth/UpdatePasswordForm";
 import ForgotPasswordScreen from "./ForgotPasswordScreen";
 import { useAuth } from "../../contexts/AuthProvider";

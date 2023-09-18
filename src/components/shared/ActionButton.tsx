@@ -1,5 +1,5 @@
-import { GestureResponderEvent, StyleSheet, Text, View } from "react-native";
-import { AddIcon, Button, ButtonIcon, ButtonText } from "@gluestack-ui/themed";
+import { GestureResponderEvent, StyleSheet } from "react-native";
+import { Button, ButtonIcon, ButtonText } from "@gluestack-ui/themed";
 
 import React from "react";
 

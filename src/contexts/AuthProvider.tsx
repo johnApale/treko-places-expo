@@ -2,12 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Provider, Session, User } from "@supabase/supabase-js";
 import * as WebBrowser from "expo-web-browser";
 
-//@ts-ignore
-import { SUPABASE_URL } from "@env";
-
 import { supabase } from "../../lib/supabase";
 import { AuthData } from "../types";
-import { TokenType } from "expo-auth-session";
 
 type TokenLogin = {
   access_token: string;

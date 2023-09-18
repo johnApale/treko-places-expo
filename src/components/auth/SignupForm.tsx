@@ -10,7 +10,6 @@ import {
   Icon,
   Input,
   InputField,
-  InputIcon,
 } from "@gluestack-ui/themed";
 
 import { signupFields } from "../../constants/authFields";

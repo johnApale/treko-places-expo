@@ -15,7 +15,6 @@ import {
 
 import ScreenTitle from "../../components/shared/ScreenTitle";
 import OAuthButton from "../../components/auth/OAuthButton";
-import ActionButton from "../../components/shared/ActionButton";
 import SignupForm from "../../components/auth/SignupForm";
 import { AuthNavigationProp } from "../../types";
 import { Text as textStyle } from "../../styles";

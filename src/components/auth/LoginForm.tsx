@@ -5,19 +5,16 @@ import {
   EyeIcon,
   EyeOffIcon,
   FormControl,
-  FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
   Icon,
   Input,
   InputField,
-  InputIcon,
 } from "@gluestack-ui/themed";
 
 import { loginFields } from "../../constants/authFields";
 import ActionButton from "../shared/ActionButton";
 import { useAuth } from "../../contexts/AuthProvider";
-import { AuthError } from "@supabase/supabase-js";
 
 type LoginProps = {
   setLoginError: (message: string) => void;
@@ -32,7 +29,6 @@ loginFields.forEach((field) => {
 export default function LoginForm({ setLoginError }: LoginProps) {
   const [loginState, setLoginState] = useState(fieldsState);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<any>();
 
   const { signIn } = useAuth();
 

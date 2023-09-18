@@ -1,4 +1,4 @@
-import { AddIcon, Input, InputField, InputIcon } from "@gluestack-ui/themed";
+import { AddIcon } from "@gluestack-ui/themed";
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Pressable,
-  KeyboardAvoidingView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 

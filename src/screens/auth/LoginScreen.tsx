@@ -9,7 +9,6 @@ import {
 import {
   AlertCircleIcon,
   Divider,
-  FormControl,
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@gluestack-ui/themed";
