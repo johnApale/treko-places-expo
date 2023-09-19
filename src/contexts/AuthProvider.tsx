@@ -54,6 +54,7 @@ const AuthProvider = ({ children }: Props) => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
+        setUser(session?.user);
         setIsLoading(false);
       }
     );

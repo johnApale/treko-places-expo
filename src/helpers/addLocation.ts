@@ -21,6 +21,7 @@ export const createPlace = async (
       ])
       .select();
     if (data) {
+      console.log(data);
       return data[0].id;
     } else {
       console.log("Places error", error.message);
