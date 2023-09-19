@@ -36,7 +36,7 @@
     },
     "owner": "treko",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/95f3c789-0705-4f27-bc2b-d29e675d2468"
