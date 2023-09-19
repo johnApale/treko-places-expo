@@ -114,7 +114,7 @@ const SignupForm = ({ setSignupError }: SignupProps) => {
       <FormControl>
         {fields.map((field) => (
           <View style={{ marginTop: 30 }} key={field.id}>
-            <Input backgroundColor="white">
+            <Input backgroundColor="white" paddingBottom={5}>
               <InputField
                 type={
                   field.type === "password"

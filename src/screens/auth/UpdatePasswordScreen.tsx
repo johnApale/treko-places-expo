@@ -21,7 +21,7 @@ const UpdatePasswordScreen = ({ navigation, route }: AuthNavigationProp) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { setUser } = useAuth();
+  const { setUser, setIsLoggedIn } = useAuth();
   const { error_description } = route.params;
   const handleUpdate = async () => {
     if (
@@ -41,8 +41,8 @@ const UpdatePasswordScreen = ({ navigation, route }: AuthNavigationProp) => {
           setErrorMessage(error.message);
           throw Error;
         } else {
-          console.log(data);
           setUser(data.user);
+          setIsLoggedIn(true);
           setErrorMessage("");
         }
       } catch (error) {

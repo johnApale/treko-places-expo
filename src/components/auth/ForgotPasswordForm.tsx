@@ -28,7 +28,7 @@ const ForgotPasswordForm = ({ setEmail }: ResetFormProps) => {
       <FormControl>
         {fields.map((field) => (
           <View key={field.id}>
-            <Input backgroundColor="white">
+            <Input backgroundColor="white" paddingBottom={5}>
               <InputField
                 type="text"
                 placeholder={field.placeholder}

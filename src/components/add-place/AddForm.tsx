@@ -440,7 +440,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               </Pressable>
               {showAddress && (
                 <>
-                  <Input size="sm">
+                  <Input size="sm" paddingBottom={5}>
                     <InputField
                       placeholder="Street Address"
                       style={{ backgroundColor: "white", borderRadius: 3 }}
@@ -454,7 +454,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15}>
+                  <Input size="sm" marginTop={15} paddingBottom={5}>
                     <InputField
                       placeholder="City"
                       style={{ backgroundColor: "white", borderRadius: 3 }}
@@ -468,7 +468,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15}>
+                  <Input size="sm" marginTop={15} paddingBottom={5}>
                     <InputField
                       placeholder="State"
                       style={{ backgroundColor: "white", borderRadius: 3 }}
@@ -482,7 +482,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15}>
+                  <Input size="sm" marginTop={15} paddingBottom={5}>
                     <InputField
                       placeholder="Postal Code"
                       style={{ backgroundColor: "white", borderRadius: 3 }}
@@ -496,7 +496,12 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15} marginBottom={25}>
+                  <Input
+                    size="sm"
+                    marginTop={15}
+                    marginBottom={25}
+                    paddingBottom={5}
+                  >
                     <InputField
                       placeholder="Country"
                       style={{ backgroundColor: "white", borderRadius: 3 }}
@@ -516,7 +521,7 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               <FormControlLabel style={{ marginTop: 5, marginBottom: 15 }}>
                 <FormControlLabelText>Name of location</FormControlLabelText>
               </FormControlLabel>
-              <Input size="sm">
+              <Input size="sm" paddingBottom={5}>
                 <InputField
                   placeholder="Location name"
                   style={{ backgroundColor: "white", borderRadius: 3 }}

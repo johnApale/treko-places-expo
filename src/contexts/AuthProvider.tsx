@@ -16,6 +16,7 @@ type ContextProps = {
   session: Session | null;
   isLoading: boolean;
   setUser: (user: User) => void;
+  setIsLoggedIn: (val: boolean) => void;
   signIn: (authData: AuthData) => Promise<string | undefined>;
   signup: (authData: AuthData) => Promise<string | undefined>;
   signInOAuth: (provider: string) => void;
@@ -37,33 +38,35 @@ const AuthProvider = ({ children }: Props) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>();
 
   useEffect(() => {
-    const setData = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (error) throw error;
-      if (session) {
-        setSession(session);
-        setUser(session?.user);
-        setIsLoggedIn(true);
-        setIsLoading(false);
-      }
-    };
+    if (isLoggedIn !== null) {
+      const setData = async () => {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+        if (error) throw error;
+        if (session) {
+          setSession(session);
+          setUser(session?.user);
+          setIsLoggedIn(true);
+          setIsLoading(false);
+        }
+      };
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user);
-        setIsLoading(false);
-      }
-    );
+      const { data: listener } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          setSession(session);
+          setUser(session?.user);
+          setIsLoading(false);
+        }
+      );
 
-    setData();
+      setData();
 
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
+      return () => {
+        listener?.subscription.unsubscribe();
+      };
+    }
   }, [user]);
 
   const signIn = async (formData: AuthData) => {
@@ -82,7 +85,7 @@ const AuthProvider = ({ children }: Props) => {
       setIsLoggedIn(true);
       setSession(data.session);
     } catch (error) {
-      console.log(error);
+      console.log("signin error", error);
     } finally {
       setIsLoading(false);
     }
@@ -109,20 +112,27 @@ const AuthProvider = ({ children }: Props) => {
       setUser(data.user ?? undefined);
       setSession(data.session);
     } catch (error) {
-      console.log(error);
+      console.log("signup error", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw new Error(error.message);
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw new Error(error.message);
+      }
+      setUser(undefined);
+      setIsLoggedIn(null);
+      setSession(null);
+    } catch (error) {
+      console.log("signout error", error);
+    } finally {
+      setIsLoading(false);
     }
-    setUser(undefined);
-    setIsLoggedIn(false);
-    setSession(null);
   };
 
   const signInOAuth = async (provider: string) => {
@@ -189,6 +199,7 @@ const AuthProvider = ({ children }: Props) => {
     const {
       data: { user: supabaseUser },
     } = await signIn();
+    setUser(user);
   };
 
   return (
@@ -204,6 +215,7 @@ const AuthProvider = ({ children }: Props) => {
         isLoading,
         loginWithToken,
         isLoggedIn,
+        setIsLoggedIn,
       }}
     >
       {children}

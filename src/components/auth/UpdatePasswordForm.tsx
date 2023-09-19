@@ -42,7 +42,7 @@ const UpdatePasswordForm = ({
     <View>
       <FormControl>
         <View>
-          <Input backgroundColor="white" marginBottom={20}>
+          <Input backgroundColor="white" marginBottom={20} paddingBottom={5}>
             <InputField
               type={showPassword ? "text" : "password"}
               placeholder="Password"
@@ -62,7 +62,7 @@ const UpdatePasswordForm = ({
               />
             </Pressable>
           </Input>
-          <Input backgroundColor="white">
+          <Input backgroundColor="white" paddingBottom={5}>
             <InputField
               type={showPassword ? "text" : "password"}
               placeholder="Confirm Password"
