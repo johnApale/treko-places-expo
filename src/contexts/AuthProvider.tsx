@@ -170,7 +170,7 @@ const AuthProvider = ({ children }: Props) => {
         const {
           data: { user: supabaseUser },
         } = await supabase.auth.refreshSession();
-        setIsLoggedIn(true);
+        // setIsLoggedIn(true);
         setUser(supabaseUser);
         if (error) {
           throw Error;

@@ -440,10 +440,16 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               </Pressable>
               {showAddress && (
                 <>
-                  <Input size="sm" paddingBottom={5}>
+                  <Input
+                    size="sm"
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 3,
+                      paddingBottom: 5,
+                    }}
+                  >
                     <InputField
                       placeholder="Street Address"
-                      style={{ backgroundColor: "white", borderRadius: 3 }}
                       value={addressData?.street_address}
                       onFocus={() => {
                         setDropdownVisible(false);
@@ -454,10 +460,17 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15} paddingBottom={5}>
+                  <Input
+                    size="sm"
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 3,
+                      paddingBottom: 5,
+                      marginTop: 15,
+                    }}
+                  >
                     <InputField
                       placeholder="City"
-                      style={{ backgroundColor: "white", borderRadius: 3 }}
                       value={addressData?.city}
                       onFocus={() => {
                         setDropdownVisible(false);
@@ -468,10 +481,17 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15} paddingBottom={5}>
+                  <Input
+                    size="sm"
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 3,
+                      paddingBottom: 5,
+                      marginTop: 15,
+                    }}
+                  >
                     <InputField
                       placeholder="State"
-                      style={{ backgroundColor: "white", borderRadius: 3 }}
                       value={addressData?.state}
                       onFocus={() => {
                         setDropdownVisible(false);
@@ -482,10 +502,17 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                       }}
                     />
                   </Input>
-                  <Input size="sm" marginTop={15} paddingBottom={5}>
+                  <Input
+                    size="sm"
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 3,
+                      paddingBottom: 5,
+                      marginTop: 15,
+                    }}
+                  >
                     <InputField
                       placeholder="Postal Code"
-                      style={{ backgroundColor: "white", borderRadius: 3 }}
                       value={addressData?.postalCode}
                       onFocus={() => {
                         setDropdownVisible(false);
@@ -498,13 +525,15 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
                   </Input>
                   <Input
                     size="sm"
-                    marginTop={15}
-                    marginBottom={25}
-                    paddingBottom={5}
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 3,
+                      marginTop: 15,
+                      marginBottom: 25,
+                    }}
                   >
                     <InputField
                       placeholder="Country"
-                      style={{ backgroundColor: "white", borderRadius: 3 }}
                       value={addressData?.country}
                       onFocus={() => {
                         setDropdownVisible(false);
@@ -521,10 +550,16 @@ const AddForm = ({ navigation }: MainNavigationProp) => {
               <FormControlLabel style={{ marginTop: 5, marginBottom: 15 }}>
                 <FormControlLabelText>Name of location</FormControlLabelText>
               </FormControlLabel>
-              <Input size="sm" paddingBottom={5}>
+              <Input
+                size="sm"
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 3,
+                  paddingBottom: 5,
+                }}
+              >
                 <InputField
                   placeholder="Location name"
-                  style={{ backgroundColor: "white", borderRadius: 3 }}
                   value={formData?.name}
                   onChangeText={(text: string) => {
                     updateFormData({ name: text });
