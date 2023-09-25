@@ -113,7 +113,7 @@ export default function LoginForm({ setLoginError }: LoginProps) {
               {field.type === "password" && (
                 <Pressable
                   onPress={handleState}
-                  style={{ alignSelf: "center", padding: 10 }}
+                  style={{ alignSelf: "center", paddingHorizontal: 10 }}
                 >
                   <Icon
                     as={showPassword ? EyeIcon : EyeOffIcon}
